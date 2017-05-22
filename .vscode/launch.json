@@ -11,7 +11,7 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceRoot}/bin/Debug/netcoreapp1.1/MainSiteCore.dll",
-            "args": ["http://localhost:5061"],
+            "args": ["--server.urls=http://*:60600"],
             "cwd": "${workspaceRoot}",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
