@@ -31,6 +31,9 @@ namespace CasperInc.MainSiteCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors();
+
             // Add framework services.
             services.AddMvc();
             services.AddEntityFrameworkSqlite();
@@ -56,6 +59,13 @@ namespace CasperInc.MainSiteCore
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCors(
+                builder => builder.WithOrigins("https://www.casperinc.expert")
+                                .AllowAnyMethod()
+                                .AllowAnyHeader()
+            );
+
 
             // seed database if needed
             try
