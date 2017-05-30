@@ -2,14 +2,6 @@
   <MonoDevelop.Ide.ItemProperties.MainSiteCore PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="MainSiteCore Status">
     <Files>
-      <File FileName="Data/DbSeeder.cs" Line="179" Column="49" />
-      <File FileName="Controllers/NarrativeController.cs" Line="42" Column="1" />
-      <File FileName="Data/Models/NarrativeTagDataModel.cs" Line="13" Column="6" />
-      <File FileName="Data/Models/NarrativeDataModel.cs" Line="21" Column="44" />
-      <File FileName="Data/Models/TagDataModel.cs" Line="27" Column="41" />
-      <File FileName="Models/Narrative.cs" Line="1" Column="1" />
-      <File FileName="Data/MainSiteCoreDBContext.cs" Line="47" Column="13" />
-      <File FileName="Startup.cs" Line="50" Column="59" />
       <File FileName="MainSiteCore Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>
