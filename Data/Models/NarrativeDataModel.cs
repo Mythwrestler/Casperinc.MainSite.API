@@ -12,8 +12,7 @@ namespace CasperInc.MainSiteCore.Data.Models {
 
         [Key]
         [RequiredAttribute]
-        public int Id { get; set;}
-
+        public Guid Id { get; set;}
         [RequiredAttribute]
         public string Title { get; set;}
         [RequiredAttribute]

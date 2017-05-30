@@ -159,7 +159,7 @@ namespace CasperInc.MainSiteCore.Data {
                     {
                         NarrativeId = item.Id,
                         NarrativeData = item,
-                        TagKeyWord = aboutTag.KeyWord,
+                        TagId = aboutTag.Id,
                         TagData = aboutTag
                     };
                  _dbContext.Add(item);
@@ -170,7 +170,7 @@ namespace CasperInc.MainSiteCore.Data {
                     {
                         NarrativeId = item.Id,
                         NarrativeData = item,
-                        TagKeyWord = newsTag.KeyWord,
+                        TagId = newsTag.Id,
                         TagData = newsTag
                     };
                  _dbContext.Add(item);

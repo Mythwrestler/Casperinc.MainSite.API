@@ -17,7 +17,7 @@ namespace MainSiteCore.Data.Migrations
 
             modelBuilder.Entity("CasperInc.MainSiteCore.Data.Models.NarrativeDataModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("BodyHtml")
@@ -40,27 +40,33 @@ namespace MainSiteCore.Data.Migrations
 
             modelBuilder.Entity("CasperInc.MainSiteCore.Data.Models.NarrativeTagDataModel", b =>
                 {
-                    b.Property<int>("NarrativeId");
+                    b.Property<Guid>("NarrativeId");
 
-                    b.Property<string>("TagKeyWord");
+                    b.Property<Guid>("TagId");
 
-                    b.HasKey("NarrativeId", "TagKeyWord");
+                    b.HasKey("NarrativeId", "TagId");
 
-                    b.HasIndex("TagKeyWord");
+                    b.HasIndex("TagId");
 
-                    b.ToTable("NarrativeTagDataModel");
+                    b.ToTable("NarrativeTagCrossWalk");
                 });
 
             modelBuilder.Entity("CasperInc.MainSiteCore.Data.Models.TagDataModel", b =>
                 {
-                    b.Property<string>("KeyWord")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreatedDate");
 
+                    b.Property<string>("KeyWord")
+                        .IsRequired();
+
                     b.Property<DateTime>("UpdatedDate");
 
-                    b.HasKey("KeyWord");
+                    b.HasKey("Id");
+
+                    b.HasIndex("KeyWord")
+                        .IsUnique();
 
                     b.ToTable("TagData");
                 });
@@ -74,7 +80,7 @@ namespace MainSiteCore.Data.Migrations
 
                     b.HasOne("CasperInc.MainSiteCore.Data.Models.TagDataModel", "TagData")
                         .WithMany("NarrativeTags")
-                        .HasForeignKey("TagKeyWord")
+                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }

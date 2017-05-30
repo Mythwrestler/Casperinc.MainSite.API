@@ -10,7 +10,7 @@ namespace CasperInc.MainSiteCore.ViewModels {
     
     [JsonObjectAttribute(MemberSerialization.OptOut)] //All properties are serailized by defaut
     public class Narrative {
-        public int Id { get; set;}
+        public Guid Id { get; set;}
         public string Title { get; set;}
         public string Description { get; set;}
         public string BodyHtml { get; set;}

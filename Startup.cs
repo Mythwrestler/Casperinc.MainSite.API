@@ -39,12 +39,13 @@ namespace CasperInc.MainSiteCore
             services.AddEntityFrameworkSqlite();
 
             services.AddDbContext<MainSiteCoreDBContext>();
-            
+
             services.AddSingleton<DbSeeder>();
 
             var MapConfig = new AutoMapper.MapperConfiguration(config =>
                 {
-                    config.CreateMap<NarrativeDataModel, Narrative>();
+                    config.CreateMap<NarrativeDataModel, Narrative>()
+                .ForMember(d => d.Tags);
                     config.CreateMap<Narrative, NarrativeDataModel>();
                     config.CreateMap<TagDataModel, Tag>();
                     config.CreateMap<Tag, TagDataModel>();
