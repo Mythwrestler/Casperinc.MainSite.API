@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
@@ -13,7 +9,7 @@ namespace CasperInc.MainSiteCore
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
-                .AddCommandLine(args)
+                //.AddCommandLine(args)
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .Build();
 
@@ -22,6 +18,7 @@ namespace CasperInc.MainSiteCore
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
+                .UseUrls("HTTP://*:6054")
                 .UseStartup<Startup>()
                 .Build();
 

@@ -10,22 +10,27 @@ namespace CasperInc.MainSiteCore.Data.Models {
 
         public NarrativeDataModel () {}
 
-        [Key]
-        [RequiredAttribute]
+		[Key]
+		[Required]
         public Guid Id { get; set;}
-        [RequiredAttribute]
+
+		[Required]
         public string Title { get; set;}
-        [RequiredAttribute]
+
+		[Required]
         public string Description { get; set;}
-        [RequiredAttribute]
+
+		[Required]
         public string BodyHtml { get; set;}
-        [RequiredAttribute]
+
+		[Required]
         public DateTime CreatedOn { get; set;}
-        [RequiredAttribute]
+
+		[Required]
         public DateTime UpdatedOn  {get; set;}
 
-        // Narrative tags
-        public virtual List<NarrativeTagDataModel> NarrativeTags {get; set;}
+        [Required]
+        public virtual IEnumerable<NarrativeTagDataModel> NarrativeTags { get; set; }
 
     }
 

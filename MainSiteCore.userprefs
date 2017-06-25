@@ -1,15 +1,17 @@
-﻿<Properties StartupConfiguration="{2FB19938-1AC6-4312-82BF-123207FB2444}|Default">
+﻿<Properties StartupConfiguration="{2FB19938-1AC6-4312-82BF-123207FB2444}|Default" NuGet.AddPackagesDialog.IncludePrerelease="True">
   <MonoDevelop.Ide.ItemProperties.MainSiteCore PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="MainSiteCore Status">
     <Files>
+      <File FileName="Repositories/NarrativeRepository.cs" Line="65" Column="40" />
+      <File FileName="Controllers/NarrativeController.cs" Line="39" Column="13" />
+      <File FileName="Repositories/INarrativeRepository.cs" Line="24" Column="2" />
+      <File FileName="DTOModels/TagDTO.cs" Line="8" Column="1" />
       <File FileName="MainSiteCore Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/Mat/source/MainSiteCore/Controllers/NarrativeController.cs" relfile="Controllers/NarrativeController.cs" line="42" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />

@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-
-
-using CasperInc.MainSiteCore.ViewModels;
 using AutoMapper;
-using CasperInc.MainSiteCore.Data;
-using CasperInc.MainSiteCore.Data.Models;
+using MainSiteCore.DTOModels;
+using CasperInc.MainSiteCore.Repositories;
 
 namespace CasperInc.MainSiteCore.Controllers
 {
@@ -17,63 +12,76 @@ namespace CasperInc.MainSiteCore.Controllers
     public class NarrativeController : Controller
     {
 
-        private MainSiteCoreDBContext _dbContext;
-        private IMapper _mapper;
+        private INarrativeRepository _repo;
 
-        public NarrativeController(MainSiteCoreDBContext dbContext, IMapper mapper)
+        public NarrativeController(INarrativeRepository repo)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _repo = repo;
         }
+
 
         [HttpGet]
         public IActionResult GetNarratives()
         {
-            var narratives = _dbContext.NarrativeData.ToArray();
+            var narrativesFromRepo = _repo.GetNarrativeList();
 
-            var narrativeTags =
-                from n in _dbContext.NarrativeData
-                join nt in _dbContext.NarrativeTagCrossWalk on n.Id equals nt.NarrativeId
-                join t in _dbContext.TagData on nt.TagId equals t.Id
-                select new { n };
+            var returnNarratives =
+                Mapper.Map<IEnumerable<NarrativeDTO>>(narrativesFromRepo);
 
-            foreach (var n in narratives)
+            foreach (var narrative in returnNarratives)
             {
-                n.NarrativeTags =
-                _dbContext.NarrativeTagCrossWalk
-                          .Where(j => j.NarrativeId == n.Id)
-                          .ToList();
+                if (narrative.Tags == null) narrative.Tags = new List<TagDTO>();
+
+                narrative.Tags.AddRange(
+                    Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(narrative.Id))
+                );
+            }
+
+            return Ok(returnNarratives);
+
+        }
+
+        [HttpGet("{keyword}")]
+		public IActionResult GetNarrativesWithKeyword(string keyword)
+		{
+
+            if (!_repo.TagExists(keyword)) return NotFound();
+
+            var narrativesFromRepo = _repo.GetNarrativeListWithKeyword(keyword);
+
+			var returnNarratives =
+				Mapper.Map<IEnumerable<NarrativeDTO>>(narrativesFromRepo);
+
+			foreach (var narrative in returnNarratives)
+			{
+				if (narrative.Tags == null) narrative.Tags = new List<TagDTO>();
+
+				narrative.Tags.AddRange(
+					Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(narrative.Id))
+				);
 			}
 
-            return new JsonResult(toNarrativeList(narratives), DefaultJsonSettings);
-        }
+			return Ok(returnNarratives);
 
+		}
 
-        //[HttpGet("Narratives")]
-        //public IActionResult GetAboutNarratives()
-        //{
-        //    var narratives = _dbContext.NarrativeData
-        //                                    .Where(n => n.NarrativeTags
-        //                                        .All(t => t.TagKeyWord == "About")
-        //                                    ).ToArray();
-
-        //    return new JsonResult(toNarrativeList(narratives), DefaultJsonSettings);
-        //}
-
-
-
-        // Mappers
-
-        private List<Narrative> toNarrativeList (IEnumerable<NarrativeDataModel> narrativeListing) 
+        [HttpGet("{narrativeId}")]
+        public IActionResult GetNarrative(Guid narrativeId)
         {
-            var outList = new List<Narrative>();
-            foreach (var narrativeData in narrativeListing)
-            {
-                outList.Add(_mapper.Map<Narrative>(narrativeData));
-            }
-            return outList;
+            var narrativeFromRepo = _repo.GetNarrative(narrativeId);
+            if (narrativeFromRepo == null) return NotFound();
+
+            var returnNarrative = Mapper.Map<NarrativeDTO>(narrativeFromRepo);
+
+            if (returnNarrative.Tags == null) returnNarrative.Tags = new List<TagDTO>();
+			returnNarrative.Tags.AddRange(
+					Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(returnNarrative.Id))
+				);
+
+            return Ok(returnNarrative);
 
         }
+
 
         private JsonSerializerSettings DefaultJsonSettings
         {

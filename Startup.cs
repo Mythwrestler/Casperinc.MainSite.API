@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using CasperInc.MainSiteCore.Data;
 using CasperInc.MainSiteCore.Data.Models;
-using CasperInc.MainSiteCore.ViewModels;
+using CasperInc.MainSiteCore.Repositories;
+using MainSiteCore.DTOModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace CasperInc.MainSiteCore
 {
@@ -34,24 +33,21 @@ namespace CasperInc.MainSiteCore
 
             services.AddCors();
 
-            // Add framework services.
-            services.AddMvc();
+			// Add framework services.
+			services.AddMvc(setupAction =>
+			{
+				setupAction.ReturnHttpNotAcceptable = true;
+				setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+				setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+			});
+
             services.AddEntityFrameworkSqlite();
 
             services.AddDbContext<MainSiteCoreDBContext>();
 
             services.AddSingleton<DbSeeder>();
 
-            var MapConfig = new AutoMapper.MapperConfiguration(config =>
-                {
-                    config.CreateMap<NarrativeDataModel, Narrative>()
-                .ForMember(d => d.Tags);
-                    config.CreateMap<Narrative, NarrativeDataModel>();
-                    config.CreateMap<TagDataModel, Tag>();
-                    config.CreateMap<Tag, TagDataModel>();
-                });
-
-            services.AddSingleton<IMapper>(MapConfig.CreateMapper());
+			services.AddScoped<INarrativeRepository, NarrativeRepository>();
 
         }
 
@@ -60,6 +56,7 @@ namespace CasperInc.MainSiteCore
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            loggerFactory.AddNLog();
 
             app.UseCors(
                 builder => builder.WithOrigins("https://www.casperinc.expert")
@@ -67,18 +64,24 @@ namespace CasperInc.MainSiteCore
                                 .AllowAnyHeader()
             );
 
-
-            // seed database if needed
-            try
+            AutoMapper.Mapper.Initialize(configure =>
             {
-                dbSeeder.SeedAsync().Wait();
-            }
-            catch (AggregateException e)
-            {
-                throw new Exception(e.ToString());
-            }
+                configure.CreateMap<NarrativeTagDataModel, narativeTags>();
+                configure.CreateMap<TagDataModel, TagDTO>();
+                configure.CreateMap<NarrativeDataModel, NarrativeDTO>();
+            });
+            
+			// seed database if needed
+			try
+			{
+				dbSeeder.SeedAsync().Wait();
+			}
+			catch (AggregateException e)
+			{
+				throw new Exception(e.ToString());
+			}
 
-            app.UseMvc();
+			app.UseMvc();
 
         }
     }

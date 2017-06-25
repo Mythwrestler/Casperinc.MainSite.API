@@ -18,13 +18,15 @@ namespace CasperInc.MainSiteCore.Data.Models
         [Required]
         public string KeyWord { get; set; }
 
-        [Required]
+		[Required]
         public DateTime CreatedDate { get; set; }
 
-        [Required]
+		[Required]
         public DateTime UpdatedDate { get; set; }
 
-        public virtual List<NarrativeTagDataModel> NarrativeTags { get; set; }
+        [Required]
+        public virtual IEnumerable<NarrativeTagDataModel> NarrativeTags { get; set; }
+
     }
 
 

@@ -8,9 +8,10 @@ using CasperInc.MainSiteCore.Data;
 namespace MainSiteCore.Data.Migrations
 {
     [DbContext(typeof(MainSiteCoreDBContext))]
-    partial class MainSiteCoreDBContextModelSnapshot : ModelSnapshot
+    [Migration("20170625052102_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");

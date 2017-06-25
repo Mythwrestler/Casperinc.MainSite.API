@@ -15,8 +15,6 @@ namespace CasperInc.MainSiteCore.Data
 
 
 
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=MainSiteCore.db");
@@ -31,7 +29,7 @@ namespace CasperInc.MainSiteCore.Data
             modelBuilder.Entity<TagDataModel>()
                         .HasIndex(t => t.KeyWord)
                         .IsUnique();
-
+            
             modelBuilder.Entity<NarrativeTagDataModel>()
                 .HasKey(t => new { t.NarrativeId, t.TagId });
 
