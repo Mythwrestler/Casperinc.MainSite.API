@@ -133,8 +133,8 @@ namespace CasperInc.MainSiteCore.Data
 				Title = "Backed by .Net Core",
 				Description = "A description of the backend services.",
 				BodyHtml =
-					"<div>" +
-						".Net core is a fantastic os agnostic version of the .Net platform.  Baked in " +
+					"<div>" + "<a href=\"https://www.microsoft.com/net/core\" target=\"_blank\">" +
+						".Net core </a> is a fantastic os agnostic version of the .Net platform.  Baked in " +
 						"dependency injection, entity framework, testing, and of course .Net Core's cross-platform  " +
 						"developement capabilites all make this platform for building web services.  ASP.Net Core " +
 						"is used to backed everything you see on this site.  Some of the webservices were built " +
@@ -145,8 +145,8 @@ namespace CasperInc.MainSiteCore.Data
 			});
 			abouts.Add(new NarrativeDataModel()
 			{
-				Title = "About Me",
-				Description = "A breif biography of Me.",
+				Title = "Angular 2",
+				Description = "A modern user experience.",
 				BodyHtml =
 					"<div>" +
 						"Angular 2 has proven to be a fantastic and easy to use front end architecture. " +

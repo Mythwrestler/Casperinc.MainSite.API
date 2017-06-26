@@ -41,29 +41,29 @@ namespace CasperInc.MainSiteCore.Controllers
 
         }
 
-        [HttpGet("{keyword}")]
-		public IActionResult GetNarrativesWithKeyword(string keyword)
-		{
+        //      [HttpGet("{keyword}")]
+        //public IActionResult GetNarrativesWithKeyword(string keyword)
+        //{
 
-            if (!_repo.TagExists(keyword)) return NotFound();
+        //          if (!_repo.TagExists(keyword)) return NotFound();
 
-            var narrativesFromRepo = _repo.GetNarrativeListWithKeyword(keyword);
+        //          var narrativesFromRepo = _repo.GetNarrativeListWithKeyword(keyword);
 
-			var returnNarratives =
-				Mapper.Map<IEnumerable<NarrativeDTO>>(narrativesFromRepo);
+        //	var returnNarratives =
+        //		Mapper.Map<IEnumerable<NarrativeDTO>>(narrativesFromRepo);
 
-			foreach (var narrative in returnNarratives)
-			{
-				if (narrative.Tags == null) narrative.Tags = new List<TagDTO>();
+        //	foreach (var narrative in returnNarratives)
+        //	{
+        //		if (narrative.Tags == null) narrative.Tags = new List<TagDTO>();
 
-				narrative.Tags.AddRange(
-					Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(narrative.Id))
-				);
-			}
+        //		narrative.Tags.AddRange(
+        //			Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(narrative.Id))
+        //		);
+        //	}
 
-			return Ok(returnNarratives);
+        //	return Ok(returnNarratives);
 
-		}
+        //}
 
         [HttpGet("{narrativeId}")]
         public IActionResult GetNarrative(Guid narrativeId)
@@ -74,9 +74,9 @@ namespace CasperInc.MainSiteCore.Controllers
             var returnNarrative = Mapper.Map<NarrativeDTO>(narrativeFromRepo);
 
             if (returnNarrative.Tags == null) returnNarrative.Tags = new List<TagDTO>();
-			returnNarrative.Tags.AddRange(
-					Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(returnNarrative.Id))
-				);
+            returnNarrative.Tags.AddRange(
+                    Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(returnNarrative.Id))
+                );
 
             return Ok(returnNarrative);
 

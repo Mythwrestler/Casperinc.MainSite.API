@@ -2,10 +2,12 @@
   <MonoDevelop.Ide.ItemProperties.MainSiteCore PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="MainSiteCore Status">
     <Files>
-      <File FileName="Repositories/NarrativeRepository.cs" Line="65" Column="40" />
-      <File FileName="Controllers/NarrativeController.cs" Line="39" Column="13" />
+      <File FileName="Data/MainSiteCoreDBContext.cs" Line="1" Column="1" />
+      <File FileName="Data/DbSeeder.cs" Line="11" Column="1" />
       <File FileName="Repositories/INarrativeRepository.cs" Line="24" Column="2" />
-      <File FileName="DTOModels/TagDTO.cs" Line="8" Column="1" />
+      <File FileName="Repositories/NarrativeRepository.cs" Line="65" Column="40" />
+      <File FileName="Controllers/NarrativeController.cs" Line="22" Column="9" />
+      <File FileName="DTOModels/NarrativeDTO.cs" Line="20" Column="27" />
       <File FileName="MainSiteCore Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>

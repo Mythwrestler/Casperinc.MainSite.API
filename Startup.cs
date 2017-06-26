@@ -33,13 +33,13 @@ namespace CasperInc.MainSiteCore
 
             services.AddCors();
 
-			// Add framework services.
-			services.AddMvc(setupAction =>
-			{
-				setupAction.ReturnHttpNotAcceptable = true;
-				setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
-				setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
-			});
+            // Add framework services.
+            services.AddMvc(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+                setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+            });
 
             services.AddEntityFrameworkSqlite();
 
@@ -47,7 +47,7 @@ namespace CasperInc.MainSiteCore
 
             services.AddSingleton<DbSeeder>();
 
-			services.AddScoped<INarrativeRepository, NarrativeRepository>();
+            services.AddScoped<INarrativeRepository, NarrativeRepository>();
 
         }
 
@@ -58,11 +58,20 @@ namespace CasperInc.MainSiteCore
             loggerFactory.AddDebug();
             loggerFactory.AddNLog();
 
-            app.UseCors(
-                builder => builder.WithOrigins("https://www.casperinc.expert")
-                                .AllowAnyMethod()
-                                .AllowAnyHeader()
-            );
+            if (env.IsProduction())
+            {
+                app.UseCors(
+                    builder => builder.WithOrigins("https://www.casperinc.expert")
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader()
+                );
+            }
+            else
+            {
+                app.UseCors(
+                    builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()
+                );
+            }
 
             AutoMapper.Mapper.Initialize(configure =>
             {
@@ -70,18 +79,18 @@ namespace CasperInc.MainSiteCore
                 configure.CreateMap<TagDataModel, TagDTO>();
                 configure.CreateMap<NarrativeDataModel, NarrativeDTO>();
             });
-            
-			// seed database if needed
-			try
-			{
-				dbSeeder.SeedAsync().Wait();
-			}
-			catch (AggregateException e)
-			{
-				throw new Exception(e.ToString());
-			}
 
-			app.UseMvc();
+            // seed database if needed
+            try
+            {
+                dbSeeder.SeedAsync().Wait();
+            }
+            catch (AggregateException e)
+            {
+                throw new Exception(e.ToString());
+            }
+
+            app.UseMvc();
 
         }
     }
