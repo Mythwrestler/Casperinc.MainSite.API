@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace CasperInc.MainSiteCore
 {
@@ -43,7 +44,10 @@ namespace CasperInc.MainSiteCore
 
             services.AddEntityFrameworkSqlite();
 
-            services.AddDbContext<MainSiteCoreDBContext>();
+            var sqlLiteConnectionString = Configuration["connectionStrings:SQLite"];
+            services.AddDbContext<MainSiteCoreDBContext>(
+                options => options.UseSqlite(sqlLiteConnectionString)
+            );
 
             services.AddSingleton<DbSeeder>();
 

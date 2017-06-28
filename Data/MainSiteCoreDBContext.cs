@@ -10,14 +10,9 @@ namespace CasperInc.MainSiteCore.Data
     public class MainSiteCoreDBContext : DbContext
     {
 
-        //public MainSiteCoreDBContext(DbContextOptions options) : base(options) {}
-        public MainSiteCoreDBContext() { }
-
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source=MainSiteCore.db");
+        public MainSiteCoreDBContext(DbContextOptions options) : base(options)
+        { 
+            Database.Migrate();
         }
 
 
