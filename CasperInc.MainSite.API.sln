@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 15.00
 # Visual Studio 2017
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainSiteCore", "MainSiteCore.csproj", "{2FB19938-1AC6-4312-82BF-123207FB2444}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainSiteCore", "Casperinc.MainSite.API.csproj", "{2FB19938-1AC6-4312-82BF-123207FB2444}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

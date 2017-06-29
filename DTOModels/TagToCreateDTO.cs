@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Casperinc.MainSite.API.DTOModels
 {
-    public class TagDTO
+    public class TagToCreateDTO
     {
-        public TagDTO() {}
+        public TagToCreateDTO() {}
 
         [Required]
         public Guid Id { get; set; }

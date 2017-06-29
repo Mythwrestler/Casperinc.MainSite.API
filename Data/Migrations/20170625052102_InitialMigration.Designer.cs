@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using CasperInc.MainSiteCore.Data;
+using Casperinc.MainSite.API.Data;
 
-namespace MainSiteCore.Data.Migrations
+namespace Casperinc.MainSite.API.Data.Migrations
 {
-    [DbContext(typeof(MainSiteCoreDBContext))]
+    [DbContext(typeof(MainSiteDbContext))]
     [Migration("20170625052102_InitialMigration")]
     partial class InitialMigration
     {
@@ -16,7 +16,7 @@ namespace MainSiteCore.Data.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");
 
-            modelBuilder.Entity("CasperInc.MainSiteCore.Data.Models.NarrativeDataModel", b =>
+            modelBuilder.Entity("Casperinc.MainSite.API.Data.Models.NarrativeDataModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -39,7 +39,7 @@ namespace MainSiteCore.Data.Migrations
                     b.ToTable("NarrativeData");
                 });
 
-            modelBuilder.Entity("CasperInc.MainSiteCore.Data.Models.NarrativeTagDataModel", b =>
+            modelBuilder.Entity("Casperinc.MainSite.API.Data.Models.NarrativeTagDataModel", b =>
                 {
                     b.Property<Guid>("NarrativeId");
 
@@ -52,7 +52,7 @@ namespace MainSiteCore.Data.Migrations
                     b.ToTable("NarrativeTagCrossWalk");
                 });
 
-            modelBuilder.Entity("CasperInc.MainSiteCore.Data.Models.TagDataModel", b =>
+            modelBuilder.Entity("Casperinc.MainSite.API.Data.Models.TagDataModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -72,14 +72,14 @@ namespace MainSiteCore.Data.Migrations
                     b.ToTable("TagData");
                 });
 
-            modelBuilder.Entity("CasperInc.MainSiteCore.Data.Models.NarrativeTagDataModel", b =>
+            modelBuilder.Entity("Casperinc.MainSite.API.Data.Models.NarrativeTagDataModel", b =>
                 {
-                    b.HasOne("CasperInc.MainSiteCore.Data.Models.NarrativeDataModel", "NarrativeData")
+                    b.HasOne("Casperinc.MainSite.API.Data.Models.NarrativeDataModel", "NarrativeData")
                         .WithMany("NarrativeTags")
                         .HasForeignKey("NarrativeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("CasperInc.MainSiteCore.Data.Models.TagDataModel", "TagData")
+                    b.HasOne("Casperinc.MainSite.API.Data.Models.TagDataModel", "TagData")
                         .WithMany("NarrativeTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade);

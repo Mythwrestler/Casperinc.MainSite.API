@@ -1,8 +1,8 @@
 ﻿using System;
-using CasperInc.MainSiteCore.Data;
-using CasperInc.MainSiteCore.Data.Models;
-using CasperInc.MainSiteCore.Repositories;
-using MainSiteCore.DTOModels;
+using Casperinc.MainSite.API.Data;
+using Casperinc.MainSite.API.Data.Models;
+using Casperinc.MainSite.API.Repositories;
+using Casperinc.MainSite.API.DTOModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 
-namespace CasperInc.MainSiteCore
+namespace Casperinc.MainSite.API
 {
     public class Startup
     {
@@ -45,7 +45,7 @@ namespace CasperInc.MainSiteCore
             services.AddEntityFrameworkSqlite();
 
             var sqlLiteConnectionString = Configuration["connectionStrings:SQLite"];
-            services.AddDbContext<MainSiteCoreDBContext>(
+            services.AddDbContext<MainSiteDbContext>(
                 options => options.UseSqlite(sqlLiteConnectionString)
             );
 
@@ -82,12 +82,19 @@ namespace CasperInc.MainSiteCore
                 configure.CreateMap<NarrativeTagDataModel, narativeTags>();
                 configure.CreateMap<TagDataModel, TagDTO>();
                 configure.CreateMap<NarrativeDataModel, NarrativeDTO>();
+                configure.CreateMap<NarrativeToCreateDTO, NarrativeDataModel>();
+                configure.CreateMap<TagToCreateDTO, TagDataModel>();
             });
 
             // seed database if needed
             try
             {
-                dbSeeder.SeedAsync().Wait();
+                if(env.IsDevelopment())
+                {
+                    dbSeeder.ResetDBAsync().Wait();
+                }else{
+                    dbSeeder.SeedAsync().Wait();
+                }
             }
             catch (AggregateException e)
             {

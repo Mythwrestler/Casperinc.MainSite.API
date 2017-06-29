@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MainSiteCore.Data.Migrations
+namespace Casperinc.MainSite.API.Data.Migrations
 {
     public partial class InitialMigration : Migration
     {

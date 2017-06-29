@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Casperinc.MainSite.API.DTOModels
 {
-    public class NarrativeDTO
+    public class NarrativeToCreateDTO
     {
-        public  NarrativeDTO() {}
+        public  NarrativeToCreateDTO() {}
 
         [Required]
         public Guid Id { get; set;}

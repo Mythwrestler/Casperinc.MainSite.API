@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-using CasperInc.MainSiteCore.Data.Models;
+using Casperinc.MainSite.API.Data.Models;
 
-namespace CasperInc.MainSiteCore.Data
+namespace Casperinc.MainSite.API.Data
 {
 
-    public class MainSiteCoreDBContext : DbContext
+    public class MainSiteDbContext : DbContext
     {
 
-        public MainSiteCoreDBContext(DbContextOptions options) : base(options)
+        public MainSiteDbContext(DbContextOptions options) : base(options)
         { 
             Database.Migrate();
         }

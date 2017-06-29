@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using AutoMapper;
-using MainSiteCore.DTOModels;
-using CasperInc.MainSiteCore.Repositories;
+using Casperinc.MainSite.API.DTOModels;
+using Casperinc.MainSite.API.Repositories;
+using Casperinc.MainSite.API.Data.Models;
 
-namespace CasperInc.MainSiteCore.Controllers
+namespace Casperinc.MainSite.API.Controllers
 {
     [Route("api/narratives")]
     public class NarrativeController : Controller
@@ -30,10 +31,10 @@ namespace CasperInc.MainSiteCore.Controllers
 
             foreach (var narrative in returnNarratives)
             {
-                if (narrative.Tags == null) narrative.Tags = new List<TagDTO>();
+                if (narrative.Keywords == null) narrative.Keywords = new List<string>();
 
-                narrative.Tags.AddRange(
-                    Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(narrative.Id))
+                narrative.Keywords.AddRange(
+                    _repo.GetKeywordsForNarrative(narrative.Id)
                 );
             }
 
@@ -41,31 +42,7 @@ namespace CasperInc.MainSiteCore.Controllers
 
         }
 
-        //      [HttpGet("{keyword}")]
-        //public IActionResult GetNarrativesWithKeyword(string keyword)
-        //{
-
-        //          if (!_repo.TagExists(keyword)) return NotFound();
-
-        //          var narrativesFromRepo = _repo.GetNarrativeListWithKeyword(keyword);
-
-        //	var returnNarratives =
-        //		Mapper.Map<IEnumerable<NarrativeDTO>>(narrativesFromRepo);
-
-        //	foreach (var narrative in returnNarratives)
-        //	{
-        //		if (narrative.Tags == null) narrative.Tags = new List<TagDTO>();
-
-        //		narrative.Tags.AddRange(
-        //			Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(narrative.Id))
-        //		);
-        //	}
-
-        //	return Ok(returnNarratives);
-
-        //}
-
-        [HttpGet("{narrativeId}")]
+        [HttpGet("{narrativeId}", Name = "GetNarrative")]
         public IActionResult GetNarrative(Guid narrativeId)
         {
             var narrativeFromRepo = _repo.GetNarrative(narrativeId);
@@ -73,13 +50,44 @@ namespace CasperInc.MainSiteCore.Controllers
 
             var returnNarrative = Mapper.Map<NarrativeDTO>(narrativeFromRepo);
 
-            if (returnNarrative.Tags == null) returnNarrative.Tags = new List<TagDTO>();
-            returnNarrative.Tags.AddRange(
-                    Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(returnNarrative.Id))
+            if (returnNarrative.Keywords == null) returnNarrative.Keywords = new List<string>();
+            returnNarrative.Keywords.AddRange(
+                    _repo.GetKeywordsForNarrative(returnNarrative.Id)
                 );
 
             return Ok(returnNarrative);
 
+        }
+
+        [HttpPost]
+        public IActionResult CreateNarrative ([FromBody] NarrativeToCreateDTO narrative)
+        {
+            if(narrative == null) return BadRequest();
+            if(narrative.Keywords == null) return BadRequest();
+
+            var newNarrative = Mapper.Map<NarrativeDataModel>(narrative);
+            var tags = new List<TagDataModel>();
+            foreach (var keyword in narrative.Keywords)
+            {
+                tags.Add(_repo.CreateTag(keyword));
+            }
+            
+            var addedNarrative = Mapper.Map<NarrativeDTO>(
+                _repo.CreateNarrative(newNarrative, tags)
+            );
+
+            addedNarrative.Keywords = new List<string>();
+            addedNarrative.Keywords.AddRange(
+                    _repo.GetKeywordsForNarrative(addedNarrative.Id)
+            );
+
+
+            return CreatedAtRoute(
+                        "GetNarrative",
+                        new {narrativeId = addedNarrative.Id},
+                        addedNarrative);
+            
+            ;
         }
 
 

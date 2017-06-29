@@ -1,5 +1,5 @@
 ﻿using System;
-namespace MainSiteCore.DTOModels
+namespace Casperinc.MainSite.API.DTOModels
 {
     public class narativeTags
     {

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CasperInc.MainSiteCore.Data;
-using CasperInc.MainSiteCore.Data.Models;
+using Casperinc.MainSite.API.Data;
+using Casperinc.MainSite.API.Data.Models;
 
-namespace CasperInc.MainSiteCore.Repositories
+namespace Casperinc.MainSite.API.Repositories
 {
     public class NarrativeRepository : INarrativeRepository
     {
 
-        private MainSiteCoreDBContext _dbContext;
+        private MainSiteDbContext _dbContext;
 
-        public NarrativeRepository(MainSiteCoreDBContext dbcontext)
+        public NarrativeRepository(MainSiteDbContext dbcontext)
         {
             _dbContext = dbcontext;
         }
@@ -29,7 +29,10 @@ namespace CasperInc.MainSiteCore.Repositories
 
         }
 
-
+        public bool NarrativeExists(Guid narrativeId)
+        {
+            return _dbContext.NarrativeData.Any(n => n.Id == narrativeId);
+        }
 
         public IEnumerable<NarrativeDataModel> GetNarrativeList()
         {
@@ -60,6 +63,10 @@ namespace CasperInc.MainSiteCore.Repositories
 
         }
 
+        public IEnumerable<string> GetKeywordsForNarrative(Guid narrativeId)
+        {
+            return getTagsForNarrative(narrativeId).Select(t => t.KeyWord);
+        }
 
 
 		public bool TagExists(string keyword)
@@ -72,6 +79,50 @@ namespace CasperInc.MainSiteCore.Repositories
 			return _dbContext.TagData.Any(t => t.Id == tagId);
 		}
 
+        public TagDataModel CreateTag(string keyword)
+        {
+            if(!TagExists(keyword))
+            {
+
+            _dbContext.TagData.Add(
+                 new TagDataModel()
+                {
+                    KeyWord = keyword
+                }
+            );
+            
+            SaveChanges();
+            }
+
+            return _dbContext.TagData.Where(t => t.KeyWord == keyword).FirstOrDefault();
+        }
+
+
+        public TagDataModel GetTag(string keyword)
+        {
+            return _dbContext.TagData.Where(t => t.KeyWord == keyword).FirstOrDefault();
+        }
+
+        public NarrativeDataModel CreateNarrative(NarrativeDataModel narrative, List<TagDataModel> tags)
+        {
+
+            foreach (TagDataModel tag in tags)
+			{
+				var narrativeTag = new NarrativeTagDataModel()
+				{
+					NarrativeId = narrative.Id,
+					NarrativeData = narrative,
+					TagId = tag.Id,
+					TagData = tag
+				};
+				_dbContext.Add(narrative);
+				_dbContext.Add(narrativeTag);
+			}
+
+            SaveChanges();
+
+            return narrative;
+        }
 
 
 

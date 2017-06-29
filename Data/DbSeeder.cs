@@ -2,20 +2,33 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using CasperInc.MainSiteCore.Data.Models;
+using Casperinc.MainSite.API.Data.Models;
 using System.Collections.Generic;
 
-namespace CasperInc.MainSiteCore.Data
+namespace Casperinc.MainSite.API.Data
 {
 
 	public class DbSeeder
 	{
 
-		private MainSiteCoreDBContext _dbContext;
+		private MainSiteDbContext _dbContext;
 
-		public DbSeeder(MainSiteCoreDBContext dbContext)
+		public DbSeeder(MainSiteDbContext dbContext)
 		{
 			_dbContext = dbContext;
+		}
+
+
+		public async Task ResetDBAsync()
+		{
+			_dbContext.Database.EnsureCreated();
+			_dbContext.NarrativeTagCrossWalk.RemoveRange(_dbContext.NarrativeTagCrossWalk);
+			_dbContext.NarrativeData.RemoveRange(_dbContext.NarrativeData);
+			_dbContext.TagData.RemoveRange(_dbContext.TagData);
+
+			await _dbContext.SaveChangesAsync();
+
+			await SeedAsync();
 		}
 
 		public async Task SeedAsync()
@@ -40,6 +53,7 @@ namespace CasperInc.MainSiteCore.Data
 			// Create News Tag
 			var newsTag = new TagDataModel()
 			{
+				Id = new Guid("0c590e5b-882a-4b39-8576-3dd983f2759e"),
 				KeyWord = "News",
 				CreatedDate = DateTime.Now,
 				UpdatedDate = DateTime.Now
@@ -48,6 +62,7 @@ namespace CasperInc.MainSiteCore.Data
 			// Create About Tag
 			var aboutTag = new TagDataModel()
 			{
+				Id = new Guid("9e6f1355-06c4-4ecb-b4a5-67d35d8e9af1"),
 				KeyWord = "About",
 				CreatedDate = DateTime.Now,
 				UpdatedDate = DateTime.Now
@@ -65,6 +80,7 @@ namespace CasperInc.MainSiteCore.Data
 
 			newsItems.Add(new NarrativeDataModel()
 			{
+				Id = new Guid("f6d78a09-fcc1-4a56-ab48-5ff9f2b81c10"),
 				Title = "New Site!!! (1 of 2)",
 				Description = "Welcome to the new Site!",
 				BodyHtml =
@@ -76,6 +92,7 @@ namespace CasperInc.MainSiteCore.Data
 			});
 			newsItems.Add(new NarrativeDataModel()
 			{
+				Id = new Guid("d12d4524-01b0-46a4-bb0b-a5c4ad522003"),
 				Title = "New Site!!! (2 of 2)",
 				Description = "Welcome to the new Site!",
 				BodyHtml =
@@ -93,6 +110,7 @@ namespace CasperInc.MainSiteCore.Data
 
 			abouts.Add(new NarrativeDataModel()
 			{
+				Id = new Guid("c860838d-b9cc-49da-8924-283703318733"),
 				Title = "About Me",
 				Description = "A breif biography of Me.",
 				BodyHtml =
@@ -106,6 +124,7 @@ namespace CasperInc.MainSiteCore.Data
 			});
 			abouts.Add(new NarrativeDataModel()
 			{
+				Id = new Guid("809d7a83-d583-4b1f-ae01-c2e17185f64c"),
 				Title = "About The Site",
 				Description = "A breif biography of the purpose of the site.",
 				BodyHtml =
@@ -118,6 +137,7 @@ namespace CasperInc.MainSiteCore.Data
 			});
 			abouts.Add(new NarrativeDataModel()
 			{
+				Id = new Guid("53c686c4-e865-4dde-83c7-ef7e969339e6"),
 				Title = "Running on Linux",
 				Description = "An explination of the operating environment.",
 				BodyHtml =
@@ -130,6 +150,7 @@ namespace CasperInc.MainSiteCore.Data
 			});
 			abouts.Add(new NarrativeDataModel()
 			{
+				Id = new Guid("54ee3ce8-0f1e-4fee-b7e2-f1123bd09c2c"),
 				Title = "Backed by .Net Core",
 				Description = "A description of the backend services.",
 				BodyHtml =
@@ -145,6 +166,7 @@ namespace CasperInc.MainSiteCore.Data
 			});
 			abouts.Add(new NarrativeDataModel()
 			{
+				Id = new Guid("e5ea0de1-b2ab-49b0-be53-8a063a7b7790"),
 				Title = "Angular 2",
 				Description = "A modern user experience.",
 				BodyHtml =

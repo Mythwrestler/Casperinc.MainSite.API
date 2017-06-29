@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CasperInc.MainSiteCore.Data.Models
+namespace Casperinc.MainSite.API.Data.Models
 {
 
     public class TagDataModel

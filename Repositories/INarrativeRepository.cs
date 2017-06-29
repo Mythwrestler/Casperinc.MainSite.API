@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using CasperInc.MainSiteCore.Data.Models;
+using Casperinc.MainSite.API.Data.Models;
 
-namespace CasperInc.MainSiteCore.Repositories
+namespace Casperinc.MainSite.API.Repositories
 {
     public interface INarrativeRepository
     {
+        bool NarrativeExists(Guid narrativeId);
+        
         IEnumerable<NarrativeDataModel> GetNarrativeList();
 
         IEnumerable<NarrativeDataModel> GetNarrativeListWithKeyword(string keyword);
@@ -17,6 +19,14 @@ namespace CasperInc.MainSiteCore.Repositories
         bool TagExists(Guid tagId);
 
         IEnumerable<TagDataModel> getTagsForNarrative(Guid narrativeId);
+
+        IEnumerable<string> GetKeywordsForNarrative(Guid narrativeId);
+        
+        TagDataModel GetTag(string keyword);
+
+        TagDataModel CreateTag(string keyword);
+
+        NarrativeDataModel CreateNarrative(NarrativeDataModel narrative, List<TagDataModel> tags);
 
         void SaveChanges();
 

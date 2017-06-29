@@ -1,6 +1,6 @@
 using System;
 
-namespace CasperInc.MainSiteCore.Data.Models
+namespace Casperinc.MainSite.API.Data.Models
 {
     // Narrative - Tag Many to Many reference
     public class NarrativeTagDataModel
