@@ -22,6 +22,7 @@ namespace Casperinc.MainSite.API
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("dbConnections.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -44,14 +45,17 @@ namespace Casperinc.MainSite.API
 
             services.AddEntityFrameworkSqlite();
 
-            var sqlLiteConnectionString = Configuration["connectionStrings:SQLite"];
+            var ConnectionString = Configuration["connectionStrings:MySQL"];
+
             services.AddDbContext<MainSiteDbContext>(
-                options => options.UseSqlite(sqlLiteConnectionString)
+                //options => options.UseSqlite(ConnectionString)
+                options => options.UseMySql(ConnectionString)
             );
 
-            services.AddSingleton<DbSeeder>();
-
             services.AddScoped<INarrativeRepository, NarrativeRepository>();
+
+			services.AddSingleton<DbSeeder>();
+
 
         }
 

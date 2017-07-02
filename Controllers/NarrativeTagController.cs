@@ -26,7 +26,7 @@ namespace Casperinc.MainSite.API.Controllers
         {
             if(!_repo.NarrativeExists(narrativeId)) return BadRequest();
 
-            var tagsFromRepo = Mapper.Map<IEnumerable<TagDTO>>(_repo.getTagsForNarrative(narrativeId));
+            var tagsFromRepo = Mapper.Map<IEnumerable<TagDTO>>(_repo.GetTagsForNarrative(narrativeId));
 
             return Ok(tagsFromRepo);
         }

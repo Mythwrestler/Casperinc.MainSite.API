@@ -18,7 +18,9 @@ namespace Casperinc.MainSite.API.Repositories
 
         bool TagExists(Guid tagId);
 
-        IEnumerable<TagDataModel> getTagsForNarrative(Guid narrativeId);
+        IEnumerable<TagDataModel> GetTagsForNarrative(Guid narrativeId);
+
+        IEnumerable<TagDataModel> GetTags();
 
         IEnumerable<string> GetKeywordsForNarrative(Guid narrativeId);
         

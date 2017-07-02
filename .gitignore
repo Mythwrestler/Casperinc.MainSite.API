@@ -1,3 +1,6 @@
+#connection settings
+dbConnections.json
+
 #compiled JS
 wwwroot/app
 wwwroot/js

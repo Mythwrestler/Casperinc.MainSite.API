@@ -6,89 +6,88 @@ using AutoMapper;
 using Casperinc.MainSite.API.DTOModels;
 using Casperinc.MainSite.API.Repositories;
 using Casperinc.MainSite.API.Data.Models;
+using System.Linq;
 
 namespace Casperinc.MainSite.API.Controllers
 {
-    [Route("api/narratives")]
-    public class NarrativeController : Controller
+    [Route("api/tags")]
+    public class TagController : Controller
     {
 
         private INarrativeRepository _repo;
 
-        public NarrativeController(INarrativeRepository repo)
+        public TagController(INarrativeRepository repo)
         {
             _repo = repo;
         }
 
 
         [HttpGet]
-        public IActionResult GetNarratives()
+        public IActionResult GetTags()
         {
-            var narrativesFromRepo = _repo.GetNarrativeList();
+            var tagsFromRepo = _repo.GetTags();
 
-            var returnNarratives =
-                Mapper.Map<IEnumerable<NarrativeDTO>>(narrativesFromRepo);
+            var returnTags =
+                Mapper.Map<IEnumerable<TagDTO>>(tagsFromRepo);
 
-            foreach (var narrative in returnNarratives)
+            foreach (var tag in returnTags)
             {
-                if (narrative.Keywords == null) narrative.Keywords = new List<string>();
-
-                narrative.Keywords.AddRange(
-                    _repo.GetKeywordsForNarrative(narrative.Id)
-                );
+                tag.Narratives = _repo.GetNarrativeListWithKeyword(tag.KeyWord)
+                    .Select(t => t.Id)
+                    .AsEnumerable();
             }
 
-            return Ok(returnNarratives);
+            return Ok(returnTags);
 
         }
 
-        [HttpGet("{narrativeId}", Name = "GetNarrative")]
-        public IActionResult GetNarrative(Guid narrativeId)
-        {
-            var narrativeFromRepo = _repo.GetNarrative(narrativeId);
-            if (narrativeFromRepo == null) return NotFound();
+        //[HttpGet("{narrativeId}", Name = "GetNarrative")]
+        //public IActionResult GetNarrative(Guid narrativeId)
+        //{
+        //    var narrativeFromRepo = _repo.GetNarrative(narrativeId);
+        //    if (narrativeFromRepo == null) return NotFound();
 
-            var returnNarrative = Mapper.Map<NarrativeDTO>(narrativeFromRepo);
+        //    var returnNarrative = Mapper.Map<NarrativeDTO>(narrativeFromRepo);
 
-            if (returnNarrative.Keywords == null) returnNarrative.Keywords = new List<string>();
-            returnNarrative.Keywords.AddRange(
-                    _repo.GetKeywordsForNarrative(returnNarrative.Id)
-                );
+        //    if (returnNarrative.Keywords == null) returnNarrative.Keywords = new List<string>();
+        //    returnNarrative.Keywords.AddRange(
+        //            _repo.GetKeywordsForNarrative(returnNarrative.Id)
+        //        );
 
-            return Ok(returnNarrative);
+        //    return Ok(returnNarrative);
 
-        }
+        //}
 
-        [HttpPost]
-        public IActionResult CreateNarrative ([FromBody] NarrativeToCreateDTO narrative)
-        {
-            if(narrative == null) return BadRequest();
-            if(narrative.Keywords == null) return BadRequest();
+        //[HttpPost]
+        //public IActionResult CreateNarrative ([FromBody] NarrativeToCreateDTO narrative)
+        //{
+        //    if(narrative == null) return BadRequest();
+        //    if(narrative.Keywords == null) return BadRequest();
 
-            var newNarrative = Mapper.Map<NarrativeDataModel>(narrative);
-            var tags = new List<TagDataModel>();
-            foreach (var keyword in narrative.Keywords)
-            {
-                tags.Add(_repo.CreateTag(keyword));
-            }
+        //    var newNarrative = Mapper.Map<NarrativeDataModel>(narrative);
+        //    var tags = new List<TagDataModel>();
+        //    foreach (var keyword in narrative.Keywords)
+        //    {
+        //        tags.Add(_repo.CreateTag(keyword));
+        //    }
             
-            var addedNarrative = Mapper.Map<NarrativeDTO>(
-                _repo.CreateNarrative(newNarrative, tags)
-            );
+        //    var addedNarrative = Mapper.Map<NarrativeDTO>(
+        //        _repo.CreateNarrative(newNarrative, tags)
+        //    );
 
-            addedNarrative.Keywords = new List<string>();
-            addedNarrative.Keywords.AddRange(
-                    _repo.GetKeywordsForNarrative(addedNarrative.Id)
-            );
+        //    addedNarrative.Keywords = new List<string>();
+        //    addedNarrative.Keywords.AddRange(
+        //            _repo.GetKeywordsForNarrative(addedNarrative.Id)
+        //    );
 
 
-            return CreatedAtRoute(
-                        "GetNarrative",
-                        new {narrativeId = addedNarrative.Id},
-                        addedNarrative);
+        //    return CreatedAtRoute(
+        //                "GetNarrative",
+        //                new {narrativeId = addedNarrative.Id},
+        //                addedNarrative);
             
-            ;
-        }
+        //    ;
+        //}
 
 
         private JsonSerializerSettings DefaultJsonSettings

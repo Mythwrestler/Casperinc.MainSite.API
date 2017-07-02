@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Casperinc.MainSite.API.DTOModels
@@ -12,5 +13,8 @@ namespace Casperinc.MainSite.API.DTOModels
 
         [Required]
         public string KeyWord { get; set; }
+
+        [Required]
+        public IEnumerable<Guid> Narratives { get; set; }
     }
 }

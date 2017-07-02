@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 15.00
 # Visual Studio 2017
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainSiteCore", "Casperinc.MainSite.API.csproj", "{2FB19938-1AC6-4312-82BF-123207FB2444}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Casperinc.MainSite.API", "Casperinc.MainSite.API.csproj", "{F545F3F4-F873-490C-88F2-3BD9DC30130D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,9 +9,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2FB19938-1AC6-4312-82BF-123207FB2444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FB19938-1AC6-4312-82BF-123207FB2444}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FB19938-1AC6-4312-82BF-123207FB2444}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FB19938-1AC6-4312-82BF-123207FB2444}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F545F3F4-F873-490C-88F2-3BD9DC30130D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F545F3F4-F873-490C-88F2-3BD9DC30130D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F545F3F4-F873-490C-88F2-3BD9DC30130D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F545F3F4-F873-490C-88F2-3BD9DC30130D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

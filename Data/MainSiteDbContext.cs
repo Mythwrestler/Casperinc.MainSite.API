@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 using Casperinc.MainSite.API.Data.Models;
+using System;
 
 namespace Casperinc.MainSite.API.Data
 {
@@ -11,8 +10,10 @@ namespace Casperinc.MainSite.API.Data
     {
 
         public MainSiteDbContext(DbContextOptions options) : base(options)
-        { 
+        {
+            
             Database.Migrate();
+
         }
 
 

@@ -4,15 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Casperinc.MainSite.API.DTOModels
 {
-    public class TagToCreateDTO
+    public class TagToUpdateDTO
     {
-        public TagToCreateDTO() {}
+        public TagToUpdateDTO() {}
+
+		[Required]
+		public Guid Id { get; set; }
 
         [Required]
         public string KeyWord { get; set; }
-
-        [Required]
-        public List<Guid> Narratives { get; set; }
 
     }
 }

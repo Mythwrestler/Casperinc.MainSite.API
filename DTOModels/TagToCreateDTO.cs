@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Casperinc.MainSite.API.DTOModels
@@ -8,9 +9,7 @@ namespace Casperinc.MainSite.API.DTOModels
         public TagToCreateDTO() {}
 
         [Required]
-        public Guid Id { get; set; }
-
-        [Required]
         public string KeyWord { get; set; }
+
     }
 }

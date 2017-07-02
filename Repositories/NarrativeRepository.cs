@@ -11,10 +11,14 @@ namespace Casperinc.MainSite.API.Repositories
 
         private MainSiteDbContext _dbContext;
 
+
+
         public NarrativeRepository(MainSiteDbContext dbcontext)
         {
             _dbContext = dbcontext;
         }
+
+
 
         public IEnumerable<NarrativeDataModel> GetNarrativeListWithKeyword(string keyword)
         {
@@ -22,17 +26,21 @@ namespace Casperinc.MainSite.API.Repositories
                 _dbContext.NarrativeTagCrossWalk
                           .Where(c => c.TagData.KeyWord == keyword)
                           .Select(j => j.NarrativeData)
-                          .ToList();
+                          .AsEnumerable();
 
 
             return narrativeListFromDb;
 
         }
 
+
+
         public bool NarrativeExists(Guid narrativeId)
         {
             return _dbContext.NarrativeData.Any(n => n.Id == narrativeId);
         }
+
+
 
         public IEnumerable<NarrativeDataModel> GetNarrativeList()
         {
@@ -48,12 +56,16 @@ namespace Casperinc.MainSite.API.Repositories
             return narrativeListFromDb;
         }
 
+
+
         public NarrativeDataModel GetNarrative(Guid narrativeId)
         {
             return _dbContext.NarrativeData.Where(n => n.Id == narrativeId).FirstOrDefault();
         }
 
-        public IEnumerable<TagDataModel> getTagsForNarrative(Guid narrativeId)
+
+
+        public IEnumerable<TagDataModel> GetTagsForNarrative(Guid narrativeId)
         {
             var tags = _dbContext.NarrativeTagCrossWalk
                                  .Where(n => n.NarrativeId == narrativeId)
@@ -63,10 +75,20 @@ namespace Casperinc.MainSite.API.Repositories
 
         }
 
+
+
         public IEnumerable<string> GetKeywordsForNarrative(Guid narrativeId)
         {
-            return getTagsForNarrative(narrativeId).Select(t => t.KeyWord);
+            return GetTagsForNarrative(narrativeId).Select(t => t.KeyWord);
         }
+
+
+
+        public IEnumerable<TagDataModel> GetTags()
+        {
+            return _dbContext.TagData.AsEnumerable();
+        }
+
 
 
 		public bool TagExists(string keyword)
@@ -74,10 +96,14 @@ namespace Casperinc.MainSite.API.Repositories
             return _dbContext.TagData.Any(t => t.KeyWord == keyword);
 		}
 
+
+
 		public bool TagExists(Guid tagId)
 		{
 			return _dbContext.TagData.Any(t => t.Id == tagId);
 		}
+
+
 
         public TagDataModel CreateTag(string keyword)
         {
@@ -98,10 +124,21 @@ namespace Casperinc.MainSite.API.Repositories
         }
 
 
+
+		public TagDataModel GetTag(Guid tagId)
+		{
+			return _dbContext.TagData.Where(t => t.Id == tagId).FirstOrDefault();
+		}
+
+
+
         public TagDataModel GetTag(string keyword)
         {
             return _dbContext.TagData.Where(t => t.KeyWord == keyword).FirstOrDefault();
         }
+
+
+
 
         public NarrativeDataModel CreateNarrative(NarrativeDataModel narrative, List<TagDataModel> tags)
         {
