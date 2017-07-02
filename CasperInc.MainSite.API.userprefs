@@ -1,0 +1,4 @@
+﻿<Properties StartupConfiguration="{2FB19938-1AC6-4312-82BF-123207FB2444}|Default" NuGet.AddPackagesDialog.IncludePrerelease="True">
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Casperinc.MainSite.API PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>

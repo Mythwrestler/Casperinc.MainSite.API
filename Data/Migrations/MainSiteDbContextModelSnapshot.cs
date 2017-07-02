@@ -8,10 +8,9 @@ using Casperinc.MainSite.API.Data;
 namespace Casperinc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    [Migration("20170625052102_InitialMigration")]
-    partial class InitialMigration
+    partial class MainSiteDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");

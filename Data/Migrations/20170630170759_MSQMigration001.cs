@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Casperinc.MainSite.API.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class MSQMigration001 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,8 @@ namespace Casperinc.MainSite.API.Data.Migrations
                 name: "NarrativeData",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     BodyHtml = table.Column<string>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(nullable: false),
@@ -28,7 +29,8 @@ namespace Casperinc.MainSite.API.Data.Migrations
                 name: "TagData",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     KeyWord = table.Column<string>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false)
