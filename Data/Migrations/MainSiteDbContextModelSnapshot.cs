@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Casperinc.MainSite.API.Data;
 
-namespace Casperinc.MainSite.API.Data.Migrations
+namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
     partial class MainSiteDbContextModelSnapshot : ModelSnapshot

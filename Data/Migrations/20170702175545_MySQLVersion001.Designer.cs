@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Casperinc.MainSite.API.Data;
 
-namespace Casperinc.MainSite.API.Data.Migrations
+namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    [Migration("20170630170759_MSQMigration001")]
-    partial class MSQMigration001
+    [Migration("20170702175545_MySQLVersion001")]
+    partial class MySQLVersion001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

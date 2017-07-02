@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Casperinc.MainSite.API.Data.Migrations
+namespace CasperInc.MainSite.API.Data.Migrations
 {
-    public partial class MSQMigration001 : Migration
+    public partial class MySQLVersion001 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
