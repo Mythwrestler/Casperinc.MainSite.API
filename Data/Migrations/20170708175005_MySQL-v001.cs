@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CasperInc.MainSite.API.Data.Migrations
 {
-    public partial class MySQLVersion001 : Migration
+    public partial class MySQLv001 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Casperinc.MainSite.API.Data;
 using Casperinc.MainSite.API.Data.Models;
+using CasperInc.MainSite.Helpers;
 
 namespace Casperinc.MainSite.API.Repositories
 {
@@ -42,18 +43,34 @@ namespace Casperinc.MainSite.API.Repositories
 
 
 
-        public IEnumerable<NarrativeDataModel> GetNarrativeList()
+        public PagedList<NarrativeDataModel> GetNarrativeList(NarrativeResourceParameters parms)
         {
-            var narrativeListFromDb = _dbContext.NarrativeData.AsEnumerable();
 
-            foreach (var narrative in narrativeListFromDb)
+            IQueryable<NarrativeDataModel> narrativesBeforePaging;
+
+            if (!string.IsNullOrEmpty(parms.KeywordFilter))
             {
-                narrative.NarrativeTags = _dbContext.NarrativeTagCrossWalk
-                                     .Where(c => c.NarrativeId == narrative.Id)
-                                     .ToList();
+                var filterString = parms.KeywordFilter.Trim().ToLowerInvariant();
+
+                narrativesBeforePaging = _dbContext.NarrativeTagCrossWalk
+                                                .Where(t => t.TagData.KeyWord == filterString)
+                                                .Select(n => n.NarrativeData)
+                                                .OrderBy(n => n.CreatedOn)
+                                                .AsQueryable();
+            } else {
+
+                narrativesBeforePaging = _dbContext.NarrativeData
+                                                .OrderBy(n => n.CreatedOn)
+                                                .AsQueryable();
             }
 
-            return narrativeListFromDb;
+            
+            return PagedList<NarrativeDataModel>.Create(
+                narrativesBeforePaging,
+                parms.PageNumber,
+                parms.PageSize
+            );
+
         }
 
 

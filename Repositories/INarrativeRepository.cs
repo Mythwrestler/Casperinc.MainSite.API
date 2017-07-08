@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Casperinc.MainSite.API.Data.Models;
+using CasperInc.MainSite.Helpers;
 
 namespace Casperinc.MainSite.API.Repositories
 {
@@ -8,7 +9,7 @@ namespace Casperinc.MainSite.API.Repositories
     {
         bool NarrativeExists(Guid narrativeId);
         
-        IEnumerable<NarrativeDataModel> GetNarrativeList();
+        PagedList<NarrativeDataModel> GetNarrativeList(NarrativeResourceParameters parms);
 
         IEnumerable<NarrativeDataModel> GetNarrativeListWithKeyword(string keyword);
 

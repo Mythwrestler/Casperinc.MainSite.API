@@ -6,6 +6,7 @@ using AutoMapper;
 using Casperinc.MainSite.API.DTOModels;
 using Casperinc.MainSite.API.Repositories;
 using Casperinc.MainSite.API.Data.Models;
+using CasperInc.MainSite.Helpers;
 
 namespace Casperinc.MainSite.API.Controllers
 {
@@ -14,17 +15,44 @@ namespace Casperinc.MainSite.API.Controllers
     {
 
         private INarrativeRepository _repo;
+        private IUrlHelper _urlHelper;
 
-        public NarrativeController(INarrativeRepository repo)
+        public NarrativeController(INarrativeRepository repo, IUrlHelper urlHelper)
         {
             _repo = repo;
+            _urlHelper = urlHelper;
         }
 
 
-        [HttpGet]
-        public IActionResult GetNarratives()
+        [HttpGet(Name = "GetNarratives")]
+        public IActionResult GetNarratives(NarrativeResourceParameters parms)
         {
-            var narrativesFromRepo = _repo.GetNarrativeList();
+            var narrativesFromRepo = _repo.GetNarrativeList(parms);
+
+ 
+            var previousPageLink = 
+                narrativesFromRepo.HasPrevious? 
+                               GetNarrativesResourceUri(parms,ResourceUriType.PreviousPage) :
+                               null;
+
+			var nextPageLink =
+				narrativesFromRepo.HasNext ?
+							   GetNarrativesResourceUri(parms, ResourceUriType.NextPage) :
+							   null;
+
+            var paginationMetadata = new
+            {
+                totalCount = narrativesFromRepo.TotalCount,
+                pageSize = narrativesFromRepo.PageSize,
+                currentPage = narrativesFromRepo.CurrentPage,
+                totalPages = narrativesFromRepo.TotalPages,
+                previousPageLink = previousPageLink,
+                nextPageLink = nextPageLink
+            };
+           
+
+            Response.Headers.Add("X-Pagination",
+                                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
             var returnNarratives =
                 Mapper.Map<IEnumerable<NarrativeDTO>>(narrativesFromRepo);
@@ -37,7 +65,7 @@ namespace Casperinc.MainSite.API.Controllers
                     _repo.GetKeywordsForNarrative(narrative.Id)
                 );
             }
-
+            
             return Ok(returnNarratives);
 
         }
@@ -102,5 +130,47 @@ namespace Casperinc.MainSite.API.Controllers
             }
         }
 
+
+
+        private string GetNarrativesResourceUri(
+            NarrativeResourceParameters narrativeResourceParameters,
+            ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return _urlHelper.Link("GetNarratives",
+                       new
+                       {
+                           keywordFilter = narrativeResourceParameters.KeywordFilter,
+                           pageNumber = narrativeResourceParameters.PageNumber - 1,
+                           pageSize = narrativeResourceParameters.PageSize
+                       });
+				case ResourceUriType.NextPage:
+					return _urlHelper.Link("GetNarratives",
+					   new
+					   {
+						   keywordFilter = narrativeResourceParameters.KeywordFilter,
+						   pageNumber = narrativeResourceParameters.PageNumber + 1,
+						   pageSize = narrativeResourceParameters.PageSize
+					   });
+                default:
+					return _urlHelper.Link("GetNarratives",
+					   new
+					   {
+						   keywordFilter = narrativeResourceParameters.KeywordFilter,
+						   pageNumber = narrativeResourceParameters.PageNumber,
+						   pageSize = narrativeResourceParameters.PageSize
+					   });
+                    
+            }
+                                
+
+        }
+
+
+
     }
 }
+
+

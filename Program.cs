@@ -9,7 +9,7 @@ namespace Casperinc.MainSite.API
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
-                //.AddCommandLine(args)
+                .AddCommandLine(args)
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .Build();
 
@@ -18,7 +18,7 @@ namespace Casperinc.MainSite.API
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                .UseUrls("HTTP://*:6054")
+                //.UseUrls("HTTP://*:6054")
                 .UseStartup<Startup>()
                 .Build();
 

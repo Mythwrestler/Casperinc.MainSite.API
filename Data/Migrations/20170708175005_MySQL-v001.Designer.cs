@@ -8,8 +8,8 @@ using Casperinc.MainSite.API.Data;
 namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    [Migration("20170702175545_MySQLVersion001")]
-    partial class MySQLVersion001
+    [Migration("20170708175005_MySQL-v001")]
+    partial class MySQLv001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
