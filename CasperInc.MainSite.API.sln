@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 15.00
 # Visual Studio 2017
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Casperinc.MainSite.API", "Casperinc.MainSite.API.csproj", "{F545F3F4-F873-490C-88F2-3BD9DC30130D}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "CasperInc.MainSite.API", "CasperInc.MainSite.API.csproj", "{F545F3F4-F873-490C-88F2-3BD9DC30130D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
