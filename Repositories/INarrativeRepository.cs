@@ -31,6 +31,8 @@ namespace Casperinc.MainSite.API.Repositories
 
         NarrativeDataModel CreateNarrative(NarrativeDataModel narrative, List<TagDataModel> tags);
 
+        NarrativeDataModel UpdateNarrative(NarrativeDataModel narrative, List<TagDataModel> tags);
+
         void SaveChanges();
 
     }

@@ -74,8 +74,8 @@ namespace Casperinc.MainSite.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DbSeeder dbSeeder)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory.AddConsole();
+            //loggerFactory.AddDebug();
             loggerFactory.AddNLog();
 
             if (env.IsProduction())
@@ -99,6 +99,8 @@ namespace Casperinc.MainSite.API
                 configure.CreateMap<TagDataModel, TagDTO>();
                 configure.CreateMap<NarrativeDataModel, NarrativeDTO>();
                 configure.CreateMap<NarrativeToCreateDTO, NarrativeDataModel>();
+                configure.CreateMap<NarrativeToUpdateDTO, NarrativeDataModel>();
+                configure.CreateMap<NarrativeDataModel, NarrativeToUpdateDTO>();
                 configure.CreateMap<TagToCreateDTO, TagDataModel>();
             });
 
