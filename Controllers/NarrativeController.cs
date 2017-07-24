@@ -125,10 +125,12 @@ namespace Casperinc.MainSite.API.Controllers
 
         }
 
+
+
         [HttpPost]
-        public IActionResult CreateNarrative([FromBody] NarrativeToCreateDTO narrative)
+        public IActionResult CreateNarrative([FromBody] NarrativeToCreateDTO narrativeForCreate)
         {
-            if (narrative == null)
+            if (narrativeForCreate == null)
             {
                 _logger.LogInformation("CreateNarratve: Failed to map input NarrativeToCreateDTO");
                 _logger.LogTrace($"{ModelState.ErrorCount} | {ModelState.Values}");
@@ -140,18 +142,18 @@ namespace Casperinc.MainSite.API.Controllers
                 _logger.LogTrace($"{ModelState.ErrorCount} | {ModelState.Values}");
             }
 
-            if (narrative.Keywords == null)
+            if (narrativeForCreate.Keywords == null)
             {
                 _logger.LogInformation("no valid key value");
                 return BadRequest();
             }
-            else if (narrative.Keywords.Count == 0)
+            else if (narrativeForCreate.Keywords.Count == 0)
             {
                 _logger.LogInformation("no valid key value");
                 return BadRequest();
             }
 
-            var newNarrative = Mapper.Map<NarrativeDataModel>(narrative);
+            var newNarrative = Mapper.Map<NarrativeDataModel>(narrativeForCreate);
 
             if (newNarrative == null)
             {
@@ -163,20 +165,31 @@ namespace Casperinc.MainSite.API.Controllers
                 _logger.LogInformation("NarrativeToCreateDTO Mapped to Narrative DataModel");
                 _logger.LogTrace(JsonConvert.SerializeObject(newNarrative));
             }
+            
 
-            var tags = new List<TagDataModel>();
-
-            foreach (var keyword in narrative.Keywords)
+            foreach (var keyword in narrativeForCreate.Keywords)
             {
-                tags.Add(_repo.CreateTag(keyword));
+                _repo.CreateTag(keyword);
             }
-            _logger.LogInformation("Tags added to data model if needed.  All tag data reriteved for keywords.");
-            _logger.LogTrace(JsonConvert.SerializeObject(tags));
+            if(!_repo.SaveChanges())
+            {
+                _logger.LogInformation($"failed to add new narrative");
+                throw new Exception($"Creating author failed on save");
+            }
+
+            var tags = _repo.GetTagsForKeywords(narrativeForCreate.Keywords);
 
 
             var addedNarrative = Mapper.Map<NarrativeDTO>(
                 _repo.CreateNarrative(newNarrative, tags)
             );
+
+            if(!_repo.SaveChanges())
+            {
+                _logger.LogInformation($"failed to add new narrative");
+                throw new Exception($"Creating author failed on save");
+            }
+
             if (addedNarrative == null)
             {
                 _logger.LogInformation("Failure writing new narrative to database");
@@ -202,6 +215,62 @@ namespace Casperinc.MainSite.API.Controllers
 
             ;
         }
+
+
+
+        [HttpPut("{narrativeId}")]
+        public IActionResult fullUpdateForNarrativeById(Guid narrativeId, [FromBody] NarrativeToUpdateDTO narrativeForUpdate)
+        {
+            if(narrativeForUpdate == null) return BadRequest();
+
+            if(!_repo.NarrativeExists(narrativeForUpdate.Id)) return NotFound();
+
+            var narrativeFromRepo = _repo.GetNarrative(narrativeId);
+
+            Mapper.Map(narrativeForUpdate, narrativeFromRepo);
+
+            if (narrativeForUpdate.Keywords == null)
+            {
+                _logger.LogInformation("no valid key value");
+                return BadRequest();
+            }
+            else if (narrativeForUpdate.Keywords.Count == 0)
+            {
+                _logger.LogInformation("no valid key value");
+                return BadRequest();
+            }
+
+            foreach (var keyword in narrativeForUpdate.Keywords)
+            {
+                _repo.CreateTag(keyword);
+            }
+
+            if(!_repo.SaveChanges())
+            {
+                _logger.LogInformation($"failed to put narrative");
+                throw new Exception($"Putting narrative failed on save");
+            }
+            var tags = _repo.GetTagsForKeywords(narrativeForUpdate.Keywords);
+
+            _logger.LogInformation("Tags added to data model if needed.  All tag data reriteved for keywords.");
+            _logger.LogTrace(JsonConvert.SerializeObject(tags));    
+
+            _repo.UpdateNarrative(narrativeFromRepo, tags);
+
+            if(!_repo.SaveChanges())
+            {
+                _logger.LogInformation($"failed to put narrative");
+                throw new Exception($"Putting narrative failed on save");
+            }
+
+           return NoContent();
+
+        }
+
+
+
+
+
 
         [HttpPatch("{narrativeId}")]
         public IActionResult partialUpdateForNarrativeById(Guid narrativeId, [FromBody] JsonPatchDocument<NarrativeToUpdateDTO> patchDoc)
@@ -241,31 +310,60 @@ namespace Casperinc.MainSite.API.Controllers
 
             Mapper.Map(narrativeToPatch, narrativeFromRepo);
 
-            var tags = new List<TagDataModel>();
+            
             foreach (var keyword in narrativeToPatch.Keywords)
             {
-                tags.Add(_repo.CreateTag(keyword));
+                _repo.CreateTag(keyword);
             }
+
+            if(!_repo.SaveChanges())
+            {
+                _logger.LogInformation($"failed to patch narrative");
+                throw new Exception($"Patching narrative failed on save");
+            }
+
+             var tags = _repo.GetTagsForKeywords(narrativeToPatch.Keywords);
             _logger.LogInformation("Tags added to data model if needed.  All tag data reriteved for keywords.");
             _logger.LogTrace(JsonConvert.SerializeObject(tags));
 
-            var updatedNarrative = Mapper.Map<NarrativeDTO>(
-                 _repo.UpdateNarrative(narrativeFromRepo, tags)
-            );
-            updatedNarrative.Keywords = new List<string>();
+            _repo.UpdateNarrative(narrativeFromRepo, tags);
 
-            updatedNarrative.Keywords.AddRange(
-                    _repo.GetKeywordsForNarrative(updatedNarrative.Id)
-            );
-            
+            if(!_repo.SaveChanges())
+            {
+                _logger.LogInformation($"failed to patch narrative");
+                throw new Exception($"Patching narrative failed on save");
+            }
 
-            return CreatedAtRoute(
-                        "GetNarrative",
-                        new { narrativeId = updatedNarrative.Id },
-                        updatedNarrative);
-
-            ;
+            return NoContent();
         }
+
+
+
+
+        [HttpDelete("{narrativeId}")]
+        public IActionResult DeleteNarrativeWithID(Guid narrativeId)
+        {
+            if(!_repo.NarrativeExists(narrativeId)) return NotFound();
+
+            var narrativeFromRepo = _repo.GetNarrative(narrativeId);
+
+            if(narrativeFromRepo == null) return NotFound();
+
+            
+            _repo.DeleteNarrative(narrativeFromRepo);
+
+            if(!_repo.SaveChanges())
+            {
+                _logger.LogInformation($"failed to delete narrative");
+                throw new Exception($"Deleting narrative failed on save");
+            }
+
+            return NoContent();
+        }
+
+
+
+
 
 
 
