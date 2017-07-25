@@ -87,7 +87,7 @@ namespace Casperinc.MainSite.API.Repositories
         public IEnumerable<TagDataModel> GetTagsForNarrative(Guid narrativeId)
         {
             var tags = _dbContext.NarrativeTagCrossWalk
-                                 .Where(n => n.NarrativeId == narrativeId)
+                                 .Where(n => n.NarrativeData.Id == narrativeId)
                                  .Select(c => c.TagData)
                                  .ToList();
             return tags;
@@ -138,6 +138,7 @@ namespace Casperinc.MainSite.API.Repositories
                 _dbContext.TagData.Add(
                      new TagDataModel()
                      {
+                         Id = Guid.NewGuid(),
                          KeyWord = keyword
                      }
                 );
@@ -166,7 +167,7 @@ namespace Casperinc.MainSite.API.Repositories
 
         public NarrativeDataModel CreateNarrative(NarrativeDataModel narrative, IEnumerable<TagDataModel> tags)
         {
-
+            narrative.Id = Guid.NewGuid();
             _dbContext.Add(narrative);
             UpdateNarrativeTagDatCrossWalk(narrative, tags);
 
@@ -188,7 +189,7 @@ namespace Casperinc.MainSite.API.Repositories
             // remove narrativetag crosswalk entry
             
             var narrativeTagsToRemove = _dbContext.NarrativeTagCrossWalk
-            .Where(nt => nt.NarrativeId == narrative.Id)
+            .Where(nt => nt.NarrativeData.Id == narrative.Id)
             .ToList();
 
             if(narrativeTagsToRemove.Count != 0) {
@@ -212,7 +213,7 @@ namespace Casperinc.MainSite.API.Repositories
 
             // remove unsued crosswalks
             var narrativeTagsToRemove = _dbContext.NarrativeTagCrossWalk
-            .Where(nt => nt.NarrativeId == narrative.Id && tags.Select(t => t.Id).Contains(nt.TagId) == false )
+            .Where(nt => nt.NarrativeData.Id == narrative.Id && tags.Select(t => t.Id).Contains(nt.TagData.Id) == false )
             .ToList();
 
 
@@ -226,7 +227,7 @@ namespace Casperinc.MainSite.API.Repositories
             {
                 // attempt to get existing narrativeTag crosswalk entry
                 var narrativeTag = _dbContext.NarrativeTagCrossWalk
-                    .Where(nt => nt.NarrativeId == narrative.Id && nt.TagId == tag.Id)
+                    .Where(nt => nt.NarrativeData.Id == narrative.Id && nt.TagData.Id == tag.Id)
                     .FirstOrDefault();
 
                 // if there is not one, remove it.
@@ -234,9 +235,9 @@ namespace Casperinc.MainSite.API.Repositories
                 {
                     narrativeTag = new NarrativeTagDataModel()
                     {
-                        NarrativeId = narrative.Id,
+                        NarrativeId = narrative.UniqueId,
                         NarrativeData = narrative,
-                        TagId = tag.Id,
+                        TagId = tag.UniqueId,
                         TagData = tag
                     };
                     _dbContext.Add(narrativeTag);

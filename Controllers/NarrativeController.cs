@@ -223,7 +223,7 @@ namespace Casperinc.MainSite.API.Controllers
         {
             if(narrativeForUpdate == null) return BadRequest();
 
-            if(!_repo.NarrativeExists(narrativeForUpdate.Id)) return NotFound();
+            if(!_repo.NarrativeExists(narrativeId)) return NotFound();
 
             var narrativeFromRepo = _repo.GetNarrative(narrativeId);
 

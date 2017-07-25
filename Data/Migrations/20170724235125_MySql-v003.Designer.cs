@@ -8,9 +8,10 @@ using Casperinc.MainSite.API.Data;
 namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    partial class MainSiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170724235125_MySql-v003")]
+    partial class MySqlv003
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");
@@ -68,8 +69,7 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<Guid>("Id");
 
                     b.Property<string>("KeyWord")
                         .IsRequired();

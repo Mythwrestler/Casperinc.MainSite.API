@@ -11,6 +11,9 @@ namespace Casperinc.MainSite.API.Data.Models {
         public NarrativeDataModel () {}
 
 		[Key]
+        [Required]
+        public Int64 UniqueId { get; set; }
+
 		[Required]
         public Guid Id { get; set;}
 
@@ -24,10 +27,14 @@ namespace Casperinc.MainSite.API.Data.Models {
         public string BodyHtml { get; set;}
 
 		[Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedOn { get; set;}
 
 		[Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedOn  {get; set;}
+
+        public Int16 DisplaySequence { get; set; }       
 
         [Required]
         public virtual IEnumerable<NarrativeTagDataModel> NarrativeTags { get; set; }

@@ -8,9 +8,10 @@ using Casperinc.MainSite.API.Data;
 namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    partial class MainSiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170725001536_MySql-v004")]
+    partial class MySqlv004
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");
@@ -31,7 +32,8 @@ namespace CasperInc.MainSite.API.Data.Migrations
 
                     b.Property<short>("DisplaySequence");
 
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Title")
                         .IsRequired();
