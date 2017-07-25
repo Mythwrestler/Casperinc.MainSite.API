@@ -21,7 +21,9 @@ namespace Casperinc.MainSite.API.Repositories
 
         IEnumerable<TagDataModel> GetTagsForNarrative(Guid narrativeId);
 
-        IEnumerable<TagDataModel> GetTags();
+        List<TagDataModel> GetTags();
+
+        List<TagDataModel> GetTagsForKeywords(List<string> keywords);
 
         IEnumerable<string> GetKeywordsForNarrative(Guid narrativeId);
         
@@ -29,11 +31,13 @@ namespace Casperinc.MainSite.API.Repositories
 
         TagDataModel CreateTag(string keyword);
 
-        NarrativeDataModel CreateNarrative(NarrativeDataModel narrative, List<TagDataModel> tags);
+        NarrativeDataModel CreateNarrative(NarrativeDataModel narrative, IEnumerable<TagDataModel> tags);
 
-        NarrativeDataModel UpdateNarrative(NarrativeDataModel narrative, List<TagDataModel> tags);
+        NarrativeDataModel UpdateNarrative(NarrativeDataModel narrative, IEnumerable<TagDataModel> tags);
 
-        void SaveChanges();
+        void DeleteNarrative(NarrativeDataModel narrative);
+
+        bool SaveChanges();
 
     }
 }

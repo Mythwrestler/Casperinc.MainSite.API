@@ -11,17 +11,24 @@ namespace Casperinc.MainSite.API.Data.Models
 
         public TagDataModel() { }
 
-        [Key]
+
+		[Key]
         [Required]
+        public Int64 UniqueId { get; set; }
+
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
         public string KeyWord { get; set; }
 
 		[Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedDate { get; set; }
 
 		[Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedDate { get; set; }
 
         [Required]

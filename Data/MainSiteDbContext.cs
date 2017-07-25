@@ -22,6 +22,14 @@ namespace Casperinc.MainSite.API.Data
 
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<NarrativeDataModel>()
+                        .HasIndex(n => n.Id)
+                        .IsUnique();
+
+            modelBuilder.Entity<TagDataModel>()
+                        .HasIndex(t => t.Id)
+                        .IsUnique();
+
             modelBuilder.Entity<TagDataModel>()
                         .HasIndex(t => t.KeyWord)
                         .IsUnique();

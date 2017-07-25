@@ -8,8 +8,8 @@ using Casperinc.MainSite.API.Data;
 namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    [Migration("20170708175005_MySQL-v001")]
-    partial class MySQLv001
+    [Migration("20170725002747_MySql-v005")]
+    partial class MySqlv005
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,32 +18,41 @@ namespace CasperInc.MainSite.API.Data.Migrations
 
             modelBuilder.Entity("Casperinc.MainSite.API.Data.Models.NarrativeDataModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("UniqueId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("BodyHtml")
                         .IsRequired();
 
-                    b.Property<DateTime>("CreatedOn");
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
                         .IsRequired();
 
+                    b.Property<short>("DisplaySequence");
+
+                    b.Property<Guid>("Id");
+
                     b.Property<string>("Title")
                         .IsRequired();
 
-                    b.Property<DateTime>("UpdatedOn");
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate();
 
-                    b.HasKey("Id");
+                    b.HasKey("UniqueId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
 
                     b.ToTable("NarrativeData");
                 });
 
             modelBuilder.Entity("Casperinc.MainSite.API.Data.Models.NarrativeTagDataModel", b =>
                 {
-                    b.Property<Guid>("NarrativeId");
+                    b.Property<long>("NarrativeId");
 
-                    b.Property<Guid>("TagId");
+                    b.Property<long>("TagId");
 
                     b.HasKey("NarrativeId", "TagId");
 
@@ -54,17 +63,25 @@ namespace CasperInc.MainSite.API.Data.Migrations
 
             modelBuilder.Entity("Casperinc.MainSite.API.Data.Models.TagDataModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("UniqueId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("KeyWord")
                         .IsRequired();
 
-                    b.Property<DateTime>("UpdatedDate");
+                    b.Property<DateTime>("UpdatedDate")
+                        .ValueGeneratedOnAddOrUpdate();
 
-                    b.HasKey("Id");
+                    b.HasKey("UniqueId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
 
                     b.HasIndex("KeyWord")
                         .IsUnique();

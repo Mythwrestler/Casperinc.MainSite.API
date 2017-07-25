@@ -95,13 +95,10 @@ namespace Casperinc.MainSite.API
 
             AutoMapper.Mapper.Initialize(configure =>
             {
-                configure.CreateMap<NarrativeTagDataModel, narativeTags>();
-                configure.CreateMap<TagDataModel, TagDTO>();
                 configure.CreateMap<NarrativeDataModel, NarrativeDTO>();
                 configure.CreateMap<NarrativeToCreateDTO, NarrativeDataModel>();
                 configure.CreateMap<NarrativeToUpdateDTO, NarrativeDataModel>();
                 configure.CreateMap<NarrativeDataModel, NarrativeToUpdateDTO>();
-                configure.CreateMap<TagToCreateDTO, TagDataModel>();
             });
 
             // seed database if needed
