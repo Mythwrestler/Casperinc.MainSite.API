@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace Casperinc.MainSite.API.Controllers
 {
-    [Route("api/narratives")]
+    [Route("mainsite/api/narratives")]
     public class NarrativeController : Controller
     {
 

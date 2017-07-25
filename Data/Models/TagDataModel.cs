@@ -21,7 +21,6 @@ namespace Casperinc.MainSite.API.Data.Models
         public Guid Id { get; set; }
 
         [Required]
-        []
         public string KeyWord { get; set; }
 
 		[Required]
