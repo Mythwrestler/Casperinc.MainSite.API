@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Casperinc.MainSite.API.Data;
-using Casperinc.MainSite.API.Data.Models;
+using CasperInc.MainSite.API.Data;
+using CasperInc.MainSite.API.Data.Models;
 using CasperInc.MainSite.Helpers;
 
-namespace Casperinc.MainSite.API.Repositories
+namespace CasperInc.MainSite.API.Repositories
 {
     public class NarrativeRepository : INarrativeRepository
     {
@@ -38,7 +38,7 @@ namespace Casperinc.MainSite.API.Repositories
 
         public bool NarrativeExists(Guid narrativeId)
         {
-            return _dbContext.NarrativeData.Any(n => n.Id == narrativeId);
+            return _dbContext.NarrativeData.Any(n => n.GuidId == narrativeId);
         }
 
 
@@ -79,7 +79,7 @@ namespace Casperinc.MainSite.API.Repositories
 
         public NarrativeDataModel GetNarrative(Guid narrativeId)
         {
-            return _dbContext.NarrativeData.Where(n => n.Id == narrativeId).FirstOrDefault();
+            return _dbContext.NarrativeData.Where(n => n.GuidId == narrativeId).FirstOrDefault();
         }
 
 
@@ -87,7 +87,7 @@ namespace Casperinc.MainSite.API.Repositories
         public IEnumerable<TagDataModel> GetTagsForNarrative(Guid narrativeId)
         {
             var tags = _dbContext.NarrativeTagCrossWalk
-                                 .Where(n => n.NarrativeData.Id == narrativeId)
+                                 .Where(n => n.NarrativeData.GuidId == narrativeId)
                                  .Select(c => c.TagData)
                                  .ToList();
             return tags;
@@ -125,7 +125,7 @@ namespace Casperinc.MainSite.API.Repositories
 
         public bool TagExists(Guid tagId)
         {
-            return _dbContext.TagData.Select(t => t.Id).Contains(tagId);
+            return _dbContext.TagData.Select(t => t.GuidId).Contains(tagId);
         }
 
 
@@ -138,7 +138,7 @@ namespace Casperinc.MainSite.API.Repositories
                 _dbContext.TagData.Add(
                      new TagDataModel()
                      {
-                         Id = Guid.NewGuid(),
+                         GuidId = Guid.NewGuid(),
                          KeyWord = keyword
                      }
                 );
@@ -152,7 +152,7 @@ namespace Casperinc.MainSite.API.Repositories
 
         public TagDataModel GetTag(Guid tagId)
         {
-            return _dbContext.TagData.Where(t => t.Id == tagId).FirstOrDefault();
+            return _dbContext.TagData.Where(t => t.GuidId == tagId).FirstOrDefault();
         }
 
 
@@ -167,7 +167,7 @@ namespace Casperinc.MainSite.API.Repositories
 
         public NarrativeDataModel CreateNarrative(NarrativeDataModel narrative, IEnumerable<TagDataModel> tags)
         {
-            narrative.Id = Guid.NewGuid();
+            narrative.GuidId = Guid.NewGuid();
             _dbContext.Add(narrative);
             UpdateNarrativeTagDatCrossWalk(narrative, tags);
 
@@ -189,7 +189,7 @@ namespace Casperinc.MainSite.API.Repositories
             // remove narrativetag crosswalk entry
             
             var narrativeTagsToRemove = _dbContext.NarrativeTagCrossWalk
-            .Where(nt => nt.NarrativeData.Id == narrative.Id)
+            .Where(nt => nt.NarrativeData.GuidId == narrative.GuidId)
             .ToList();
 
             if(narrativeTagsToRemove.Count != 0) {
@@ -213,7 +213,7 @@ namespace Casperinc.MainSite.API.Repositories
 
             // remove unsued crosswalks
             var narrativeTagsToRemove = _dbContext.NarrativeTagCrossWalk
-            .Where(nt => nt.NarrativeData.Id == narrative.Id && tags.Select(t => t.Id).Contains(nt.TagData.Id) == false )
+            .Where(nt => nt.NarrativeData.GuidId == narrative.GuidId && tags.Select(t => t.GuidId).Contains(nt.TagData.GuidId) == false )
             .ToList();
 
 
@@ -227,7 +227,7 @@ namespace Casperinc.MainSite.API.Repositories
             {
                 // attempt to get existing narrativeTag crosswalk entry
                 var narrativeTag = _dbContext.NarrativeTagCrossWalk
-                    .Where(nt => nt.NarrativeData.Id == narrative.Id && nt.TagData.Id == tag.Id)
+                    .Where(nt => nt.NarrativeData.GuidId == narrative.GuidId && nt.TagData.GuidId == tag.GuidId)
                     .FirstOrDefault();
 
                 // if there is not one, remove it.

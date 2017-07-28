@@ -30,6 +30,12 @@
     <PackageReference Include="NLog.Extensions.Logging" Version="1.0.0-rtm-beta5" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="1.1.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.1.4" />
+    <PackageReference Include="AspNet.Security.OAuth.Validation" Version="1.0.0-*" />
+    <PackageReference Include="OpenIddict" Version="1.0.0-beta2-0615" />
+    <PackageReference Include="OpenIddict.Models" Version="1.0.0-beta2-0615" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="1.0.0-beta2-0615" />
+    <PackageReference Include="OpenIddict.Mvc" Version="1.0.0-beta2-0615" />
   </ItemGroup>
   <ItemGroup>
     <None Update="nlog.config">

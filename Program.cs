@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
-namespace Casperinc.MainSite.API
+namespace CasperInc.MainSite.API
 {
     public class Program
     {

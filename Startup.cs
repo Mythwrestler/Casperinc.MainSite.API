@@ -1,8 +1,8 @@
 ﻿using System;
-using Casperinc.MainSite.API.Data;
-using Casperinc.MainSite.API.Data.Models;
-using Casperinc.MainSite.API.Repositories;
-using Casperinc.MainSite.API.DTOModels;
+using CasperInc.MainSite.API.Data;
+using CasperInc.MainSite.API.Data.Models;
+using CasperInc.MainSite.API.Repositories;
+using CasperInc.MainSite.API.DTOModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -14,8 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Casperinc.MainSite.API
+namespace CasperInc.MainSite.API
 {
     public class Startup
     {
@@ -55,6 +56,58 @@ namespace Casperinc.MainSite.API
                 options => options.UseMySql(ConnectionString)
             );
 
+
+            services.AddIdentity<UserDataModel, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Cookies.ApplicationCookie.AutomaticChallenge = false;
+            })
+            .AddEntityFrameworkStores<MainSiteDbContext>()
+            .AddDefaultTokenProviders();
+
+
+            // Register the OpenIddict services.
+            // Note: use the generic overload if you need
+            // to replace the default OpenIddict entities.
+            services.AddOpenIddict(options =>
+            {
+                // Register the Entity Framework stores.
+                options.AddEntityFrameworkCoreStores<MainSiteDbContext>();
+
+                options.UseJsonWebTokens();
+
+                // Register the ASP.NET Core MVC binder used by OpenIddict.
+                // Note: if you don't call this method, you won't be able to
+                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                options.AddMvcBinders();
+
+				// Enable the token endpoint (required to use the password flow).
+				options.EnableTokenEndpoint(
+						Configuration["Authentication:OpenIddict:TokenEndPoint"]
+                );
+
+				options.EnableAuthorizationEndpoint(
+						Configuration["Authentication:OpenIddict:AuthorizationEndPoint"]
+				);
+
+                // Allow client applications to use the grant_type=password flow.
+                options.AllowPasswordFlow();
+
+                options.AllowAuthorizationCodeFlow();
+
+                options.AllowImplicitFlow();
+
+                options.AllowRefreshTokenFlow();
+
+                // During development, you can disable the HTTPS requirement.
+                options.DisableHttpsRequirement();
+
+                options.AddEphemeralSigningKey();
+            });
+
+
+
             services.AddScoped<INarrativeRepository, NarrativeRepository>();
 
 			services.AddSingleton<DbSeeder>();
@@ -78,16 +131,14 @@ namespace Casperinc.MainSite.API
             //loggerFactory.AddDebug();
             loggerFactory.AddNLog();
 
-            if (env.IsProduction())
+            if (env.IsProduction()) 
             {
                 app.UseCors(
-                    builder => builder.WithOrigins("https://www.casperinc.expert")
+                    builder => builder.WithOrigins("https://www.CasperInc.expert")
                                     .AllowAnyMethod()
                                     .AllowAnyHeader()
                 );
-            }
-            else
-            {
+            } else {
                 app.UseCors(
                     builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()
                 );

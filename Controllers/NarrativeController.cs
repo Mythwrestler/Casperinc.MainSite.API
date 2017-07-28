@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using AutoMapper;
-using Casperinc.MainSite.API.DTOModels;
-using Casperinc.MainSite.API.Repositories;
-using Casperinc.MainSite.API.Data.Models;
+using CasperInc.MainSite.API.DTOModels;
+using CasperInc.MainSite.API.Repositories;
+using CasperInc.MainSite.API.Data.Models;
 using CasperInc.MainSite.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.JsonPatch;
 
-namespace Casperinc.MainSite.API.Controllers
+namespace CasperInc.MainSite.API.Controllers
 {
     [Route("mainsite/api/narratives")]
     public class NarrativeController : Controller
@@ -104,7 +104,7 @@ namespace Casperinc.MainSite.API.Controllers
             }
             else
             {
-                _logger.LogInformation($"NarraitveDataModel {narrativeFromRepo.Id} retrieved.");
+                _logger.LogInformation($"NarraitveDataModel {narrativeFromRepo.GuidId} retrieved.");
                 _logger.LogTrace(JsonConvert.SerializeObject(narrativeFromRepo));
             }
 

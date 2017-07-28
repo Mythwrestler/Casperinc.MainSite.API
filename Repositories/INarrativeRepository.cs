@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Casperinc.MainSite.API.Data.Models;
+using CasperInc.MainSite.API.Data.Models;
 using CasperInc.MainSite.Helpers;
 
-namespace Casperinc.MainSite.API.Repositories
+namespace CasperInc.MainSite.API.Repositories
 {
     public interface INarrativeRepository
     {

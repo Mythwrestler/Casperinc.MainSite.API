@@ -14,10 +14,10 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/Casper/Source/Casperinc.MainSite.API/Data/MainSiteDbContext.cs" relfile="Data/MainSiteDbContext.cs" line="15" column="1" />
+      <Breakpoint file="/Users/Casper/Source/CasperInc.MainSite.API/Data/MainSiteDbContext.cs" relfile="Data/MainSiteDbContext.cs" line="15" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.ItemProperties.Casperinc.MainSite.API PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.CasperInc.MainSite.API PreferredExecutionTarget="MonoDevelop.Default" />
 </Properties>
