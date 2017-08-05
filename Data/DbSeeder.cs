@@ -34,6 +34,14 @@ namespace CasperInc.MainSite.API.Data
             _dbContext.NarrativeTagCrossWalk.RemoveRange(_dbContext.NarrativeTagCrossWalk);
             _dbContext.NarrativeData.RemoveRange(_dbContext.NarrativeData);
             _dbContext.TagData.RemoveRange(_dbContext.TagData);
+            _dbContext.UserClaims.RemoveRange(_dbContext.UserClaims);
+            _dbContext.UserLogins.RemoveRange(_dbContext.UserLogins);
+            _dbContext.UserRoles.RemoveRange(_dbContext.UserRoles);
+            _dbContext.UserTokens.RemoveRange(_dbContext.UserTokens);
+            _dbContext.Users.RemoveRange(_dbContext.Users);
+            _dbContext.RoleClaims.RemoveRange(_dbContext.RoleClaims);
+            _dbContext.Roles.RemoveRange(_dbContext.Roles);
+
 
             await _dbContext.SaveChangesAsync();
 
@@ -74,10 +82,12 @@ namespace CasperInc.MainSite.API.Data
             if (!await _roleManager.RoleExistsAsync(role_Administrators))
             {
                 await _roleManager.CreateAsync(new IdentityRole(role_Administrators));
+                await _dbContext.SaveChangesAsync();
             }
             if (!await _roleManager.RoleExistsAsync(role_Registered))
             {
                 await _roleManager.CreateAsync(new IdentityRole(role_Registered));
+                await _dbContext.SaveChangesAsync();
             }
 
 
@@ -87,8 +97,8 @@ namespace CasperInc.MainSite.API.Data
             {
                 UserName = "Admin",
                 Email = "admin@casperinc.expert",
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
+                //CreatedDate = DateTime.Now,
+                //UpdatedDate = DateTime.Now
             };
 
 
@@ -101,13 +111,14 @@ namespace CasperInc.MainSite.API.Data
                 user_admin.EmailConfirmed = true;
                 user_admin.LockoutEnabled = false;
             }
+            await _dbContext.SaveChangesAsync();
 
             var user_casperm = new UserDataModel()
             {
                 UserName = "casperm",
                 Email = "mathew.casper@casperinc.expert",
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
+                //CreatedDate = DateTime.Now,
+                //UpdatedDate = DateTime.Now
             };
             if (await _userManager.FindByIdAsync(user_casperm.Id) == null)
             {
@@ -117,24 +128,25 @@ namespace CasperInc.MainSite.API.Data
                 user_casperm.EmailConfirmed = true;
                 user_casperm.LockoutEnabled = false;
             }
-
-
-            var user_caspermAdmin = new UserDataModel()
-            {
-                UserName = "casperm-admin",
-                Email = "mathew.casper@casperinc.expert",
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
-            };
-            if (await _userManager.FindByIdAsync(user_caspermAdmin.Id) == null)
-            {
-                await _userManager.CreateAsync(user_caspermAdmin, "tempPass1sLegit!");
-                await _userManager.AddToRoleAsync(user_caspermAdmin, role_Administrators);
-                //Mark Email as confirmed and remove Account Lock
-                user_caspermAdmin.EmailConfirmed = true;
-                user_caspermAdmin.LockoutEnabled = false;
-            }
             await _dbContext.SaveChangesAsync();
+
+
+            // var user_caspermAdmin = new UserDataModel()
+            // {
+            //     UserName = "casperm-admin",
+            //     Email = "mathew.casper@casperinc.expert",
+            //     //CreatedDate = DateTime.Now,
+            //     //UpdatedDate = DateTime.Now
+            // };
+            // if (await _userManager.FindByIdAsync(user_caspermAdmin.Id) == null)
+            // {
+            //     await _userManager.CreateAsync(user_caspermAdmin, "tempPass1sLegit!");
+            //     await _userManager.AddToRoleAsync(user_caspermAdmin, role_Administrators);
+            //     //Mark Email as confirmed and remove Account Lock
+            //     user_caspermAdmin.EmailConfirmed = true;
+            //     user_caspermAdmin.LockoutEnabled = false;
+            // }
+            // await _dbContext.SaveChangesAsync();
         }
 
 
@@ -162,7 +174,7 @@ namespace CasperInc.MainSite.API.Data
 
         private async Task CreateNarrativeData()
         {
-            UserDataModel user = await _dbContext.Users.Where(u => u.Id == "casperm").FirstOrDefaultAsync();
+            UserDataModel user = await _dbContext.Users.Where(u => u.UserName == "casperm").FirstOrDefaultAsync();
 
             //Create Sample News Narratives
             List<NarrativeDataModel> newsItems = new List<NarrativeDataModel>();
@@ -281,14 +293,14 @@ namespace CasperInc.MainSite.API.Data
                 _dbContext.Add(narraitve);
                 _dbContext.Add(narrativeTag);
 
-                var author = new NarrativeUserDataModel()
-                {
-                    NarrativeId = narraitve.UniqueId,
-                    NarrativeData = narraitve,
-                    UserId = user.Id,
-					UserData = user
-                };
-				_dbContext.Add(author);
+                // var author = new NarrativeUserDataModel()
+                // {
+                //     NarrativeId = narraitve.UniqueId,
+                //     NarrativeData = narraitve,
+                //     UserId = user.Id,
+				// 	UserData = user
+                // };
+				// _dbContext.Add(author);
 
             }
             foreach (NarrativeDataModel narraitve in newsItems)
@@ -302,14 +314,14 @@ namespace CasperInc.MainSite.API.Data
                 };
                 _dbContext.Add(narraitve);
                 _dbContext.Add(narrativeTag);
-                var author = new NarrativeUserDataModel()
-                {
-                    NarrativeId = narraitve.UniqueId,
-                    NarrativeData = narraitve,
-                    UserId = user.Id,
-					UserData = user
-                };
-				_dbContext.Add(author);
+                // var author = new NarrativeUserDataModel()
+                // {
+                //     NarrativeId = narraitve.UniqueId,
+                //     NarrativeData = narraitve,
+                //     UserId = user.Id,
+				// 	UserData = user
+                // };
+				// _dbContext.Add(author);
             }
             await _dbContext.SaveChangesAsync();
         }

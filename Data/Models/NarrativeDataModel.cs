@@ -48,9 +48,9 @@ namespace CasperInc.MainSite.API.Data.Models {
         [ForeignKey("UniqueId")]
         public virtual IEnumerable<NarrativeTagDataModel> NarrativeTags { get; set; }
 
-        [Required]
-        [ForeignKey("UserId")]
-        public virtual IEnumerable<NarrativeUserDataModel> Authors { get; set; }
+        // [Required]
+        // [ForeignKey("UserId")]
+        // public virtual IEnumerable<NarrativeUserDataModel> Authors { get; set; }
 
     }
 

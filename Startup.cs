@@ -3,6 +3,7 @@ using CasperInc.MainSite.API.Data;
 using CasperInc.MainSite.API.Data.Models;
 using CasperInc.MainSite.API.Repositories;
 using CasperInc.MainSite.API.DTOModels;
+using CasperInc.MainSite.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -15,6 +16,13 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using CryptoHelper;
+using System.Threading.Tasks;
+using System.Threading;
+using OpenIddict.Core;
+using OpenIddict.Models;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace CasperInc.MainSite.API
 {
@@ -47,15 +55,19 @@ namespace CasperInc.MainSite.API
                 setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
             });
 
-            services.AddEntityFrameworkSqlite();
+            //services.AddEntityFrameworkSqlite();
+
+            var mySQLConnectionString = Configuration["connectionStrings:MySQL"];
+            var sqLiteConnectionString = Configuration["connectionStrings:SQLite"];
+            services.AddDbContext<MainSiteDbContext>(options =>
+           {
+               options.UseMySql(mySQLConnectionString);
+               options.UseOpenIddict();
+           });
+
+            services.AddEntityFramework();
 
             var ConnectionString = Configuration["connectionStrings:MySQL"];
-
-            services.AddDbContext<MainSiteDbContext>(
-                //options => options.UseSqlite(ConnectionString)
-                options => options.UseMySql(ConnectionString)
-            );
-
 
             services.AddIdentity<UserDataModel, IdentityRole>(options =>
             {
@@ -131,10 +143,29 @@ namespace CasperInc.MainSite.API
             //loggerFactory.AddDebug();
             loggerFactory.AddNLog();
 
+            // seed database if needed
+            try
+            {
+                if(env.IsDevelopment())
+                {
+                    dbSeeder.ResetDBAsync().Wait();
+                }else{
+                    dbSeeder.SeedAsync().Wait();
+                }
+            }
+            catch (AggregateException e)
+            {
+                throw new Exception(e.ToString());
+            }
+
+
+
             if (env.IsProduction()) 
             {
                 app.UseCors(
-                    builder => builder.WithOrigins("https://www.CasperInc.expert")
+                    builder => builder
+                                    .WithOrigins("https://www.casperinc.expert")
+                                    .WithOrigins("https://dev-web.casperinc.net")
                                     .AllowAnyMethod()
                                     .AllowAnyHeader()
                 );
@@ -152,23 +183,64 @@ namespace CasperInc.MainSite.API
                 configure.CreateMap<NarrativeDataModel, NarrativeToUpdateDTO>();
             });
 
-            // seed database if needed
-            try
+
+
+
+            app.UseOAuthValidation();
+
+
+			//app.UseJwtProvider();
+			app.UseOpenIddict();
+
+            app.UseJwtBearerAuthentication(new JwtBearerOptions()
             {
-                if(env.IsDevelopment())
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+				RequireHttpsMetadata = false,
+				Authority = Configuration["Authentication:OpenIddict:Authority"],
+                TokenValidationParameters = new TokenValidationParameters()
                 {
-                    dbSeeder.ResetDBAsync().Wait();
-                }else{
-                    dbSeeder.SeedAsync().Wait();
+                    //IssuerSigningKey = JwtTokenProvider.SecurityKey,
+                    //ValidateIssuerSigningKey = true,
+                    //ValidIssuer = JwtTokenProvider.Issuer,
+                    ValidateIssuer = false,
+                    ValidateAudience = false
                 }
-            }
-            catch (AggregateException e)
-            {
-                throw new Exception(e.ToString());
-            }
+            });
 
             app.UseMvc();
 
+			InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
+
         }
+
+        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken)
+		{
+			// Create a new service scope to ensure the database context is correctly disposed when this methods returns.
+			using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			{
+				var context = scope.ServiceProvider.GetRequiredService<MainSiteDbContext>();
+				await context.Database.EnsureCreatedAsync();
+
+				// Note: when using a custom entity or a custom key type, replace OpenIddictApplication by the appropriate type.
+				var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
+
+				if (await manager.FindByClientIdAsync(Configuration["Authentication:OpenIddict:ClientId"], cancellationToken) == null)
+				{
+                    var application = new OpenIddictApplication
+                    {
+                        Id = Configuration["Authentication:OpenIddict:ApplicationId"],
+                        DisplayName = Configuration["Authentication:OpenIddict:DisplayName"],
+                        RedirectUri =  Configuration["Authentication:OpenIddict:Authority"] + Configuration["Authentication:OpenIddict:TokenEndPoint"],
+                        LogoutRedirectUri = Configuration["Authentication:OpenIddict:Authority"] + "/",
+                        ClientId = Configuration["Authentication:OpenIddict:ClientId"]
+					};
+
+					// await manager.CreateAsync(application, Configuration["Authentication:OpenIddict:ClientSecret"], cancellationToken);
+					 await manager.CreateAsync(application, cancellationToken);
+				}
+			}
+		}
+
     }
 }

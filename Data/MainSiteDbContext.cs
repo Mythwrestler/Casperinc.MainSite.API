@@ -46,25 +46,24 @@ namespace CasperInc.MainSite.API.Data
                 .WithMany(t => t.NarrativeTags)
                 .HasForeignKey(pt => pt.TagId);
 
-            modelBuilder.Entity<NarrativeUserDataModel>()
-                .HasKey(nu => new { nu.NarrativeId, nu.UserId});
+            // modelBuilder.Entity<NarrativeUserDataModel>()
+            //     .HasKey(nu => new { nu.NarrativeId, nu.UserId});
 
-            modelBuilder.Entity<NarrativeUserDataModel>()
-                .HasOne(nu => nu.NarrativeData)
-                .WithMany(n => n.Authors)
-                .HasForeignKey(nu => nu.NarrativeId);
+            // modelBuilder.Entity<NarrativeUserDataModel>()
+            //     .HasOne(nu => nu.NarrativeData)
+            //     .WithMany(n => n.Authors)
+            //     .HasForeignKey(nu => nu.NarrativeId);
 
-            modelBuilder.Entity<NarrativeUserDataModel>()
-                .HasOne(nu => nu.UserData)
-                .WithMany(u => u.Narratives)
-                .HasForeignKey(nu => nu.UserId);
+            // modelBuilder.Entity<NarrativeUserDataModel>()
+            //     .HasOne(nu => nu.UserData)
+            //     .WithMany(u => u.Narratives)
+            //     .HasForeignKey(nu => nu.UserId);
         }
 
         public DbSet<NarrativeDataModel> NarrativeData { get; set; }
         public DbSet<TagDataModel> TagData { get; set; }
         public DbSet<NarrativeTagDataModel> NarrativeTagCrossWalk { get; set; }
-        public DbSet<NarrativeUserDataModel> AuthorCrossWalk { get; set; }
-
+        // public DbSet<NarrativeUserDataModel> AuthorCrossWalk { get; set; }
         public DbSet<CommentDataModel> CommentData { get; set; }
 
     }

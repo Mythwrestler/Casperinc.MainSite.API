@@ -9,7 +9,7 @@ namespace CasperInc.MainSite.API.DTOModels
         public  NarrativeDTO() {}
 
         [Required]
-        public Guid Id { get; set;}
+        public Guid GuidId { get; set;}
         [Required]
         public string Title { get; set;}
         [Required]

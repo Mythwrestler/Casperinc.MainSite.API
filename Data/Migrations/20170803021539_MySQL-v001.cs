@@ -130,14 +130,13 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     TagId = table.Column<long>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    UniqueId = table.Column<long>(nullable: false),
+                    UniqueId = table.Column<int>(nullable: true),
                     UpdatedDate = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_NarrativeTagCrossWalk", x => new { x.NarrativeId, x.TagId });
-                    table.UniqueConstraint("AK_NarrativeTagCrossWalk_UniqueId", x => x.UniqueId);
                     table.ForeignKey(
                         name: "FK_NarrativeTagCrossWalk_NarrativeData_NarrativeId",
                         column: x => x.NarrativeId,
@@ -149,36 +148,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
                         column: x => x.TagId,
                         principalTable: "TagData",
                         principalColumn: "UniqueId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AuthorCrossWalk",
-                columns: table => new
-                {
-                    NarrativeId = table.Column<long>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    UniqueId = table.Column<long>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AuthorCrossWalk", x => new { x.NarrativeId, x.UserId });
-                    table.UniqueConstraint("AK_AuthorCrossWalk_UniqueId", x => x.UniqueId);
-                    table.ForeignKey(
-                        name: "FK_AuthorCrossWalk_NarrativeData_NarrativeId",
-                        column: x => x.NarrativeId,
-                        principalTable: "NarrativeData",
-                        principalColumn: "UniqueId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AuthorCrossWalk_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -290,11 +259,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthorCrossWalk_UserId",
-                table: "AuthorCrossWalk",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TagData_GuidId",
                 table: "TagData",
                 column: "GuidId",
@@ -350,9 +314,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
                 name: "NarrativeTagCrossWalk");
 
             migrationBuilder.DropTable(
-                name: "AuthorCrossWalk");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -368,10 +329,10 @@ namespace CasperInc.MainSite.API.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "TagData");
+                name: "NarrativeData");
 
             migrationBuilder.DropTable(
-                name: "NarrativeData");
+                name: "TagData");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using CasperInc.MainSite.API.Data;
-using CasperInc.MainSite.API.Data.Models;
+using CasperInc.MainSite.Helpers;
 
 namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    [Migration("20170726234904_MySQL-v001")]
-    partial class MySQLv001
+    [Migration("20170803165349_MySQL-v002")]
+    partial class MySQLv002
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,8 @@ namespace CasperInc.MainSite.API.Data.Migrations
 
             modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.NarrativeDataModel", b =>
                 {
-                    b.Property<long>("UniqueId");
+                    b.Property<long>("UniqueId")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("BodyHtml")
                         .IsRequired();
@@ -64,41 +65,16 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("UniqueId");
+                    b.Property<int?>("UniqueId");
 
                     b.Property<DateTime>("UpdatedDate")
                         .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("NarrativeId", "TagId");
 
-                    b.HasAlternateKey("UniqueId");
-
                     b.HasIndex("TagId");
 
                     b.ToTable("NarrativeTagCrossWalk");
-                });
-
-            modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.NarrativeUserDataModel", b =>
-                {
-                    b.Property<long>("NarrativeId");
-
-                    b.Property<string>("UserId");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("UniqueId");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.HasKey("NarrativeId", "UserId");
-
-                    b.HasAlternateKey("UniqueId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AuthorCrossWalk");
                 });
 
             modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.TagDataModel", b =>
@@ -293,6 +269,83 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("OpenIddict.Models.OpenIddictApplication", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClientId");
+
+                    b.Property<string>("ClientSecret");
+
+                    b.Property<string>("DisplayName");
+
+                    b.Property<string>("LogoutRedirectUri");
+
+                    b.Property<string>("RedirectUri");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId")
+                        .IsUnique();
+
+                    b.ToTable("OpenIddictApplications");
+                });
+
+            modelBuilder.Entity("OpenIddict.Models.OpenIddictAuthorization", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationId");
+
+                    b.Property<string>("Scope");
+
+                    b.Property<string>("Subject");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("OpenIddictAuthorizations");
+                });
+
+            modelBuilder.Entity("OpenIddict.Models.OpenIddictScope", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OpenIddictScopes");
+                });
+
+            modelBuilder.Entity("OpenIddict.Models.OpenIddictToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationId");
+
+                    b.Property<string>("AuthorizationId");
+
+                    b.Property<string>("Subject");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("AuthorizationId");
+
+                    b.ToTable("OpenIddictTokens");
+                });
+
             modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.CommentDataModel", b =>
                 {
                     b.HasBaseType("CasperInc.MainSite.API.Data.Models.NarrativeDataModel");
@@ -320,19 +373,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.HasOne("CasperInc.MainSite.API.Data.Models.TagDataModel", "TagData")
                         .WithMany("NarrativeTags")
                         .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.NarrativeUserDataModel", b =>
-                {
-                    b.HasOne("CasperInc.MainSite.API.Data.Models.NarrativeDataModel", "NarrativeData")
-                        .WithMany("Authors")
-                        .HasForeignKey("NarrativeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("CasperInc.MainSite.API.Data.Models.UserDataModel", "UserData")
-                        .WithMany("Narratives")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -371,6 +411,24 @@ namespace CasperInc.MainSite.API.Data.Migrations
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("OpenIddict.Models.OpenIddictAuthorization", b =>
+                {
+                    b.HasOne("OpenIddict.Models.OpenIddictApplication", "Application")
+                        .WithMany("Authorizations")
+                        .HasForeignKey("ApplicationId");
+                });
+
+            modelBuilder.Entity("OpenIddict.Models.OpenIddictToken", b =>
+                {
+                    b.HasOne("OpenIddict.Models.OpenIddictApplication", "Application")
+                        .WithMany("Tokens")
+                        .HasForeignKey("ApplicationId");
+
+                    b.HasOne("OpenIddict.Models.OpenIddictAuthorization", "Authorization")
+                        .WithMany("Tokens")
+                        .HasForeignKey("AuthorizationId");
                 });
 
             modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.CommentDataModel", b =>

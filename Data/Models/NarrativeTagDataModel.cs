@@ -11,9 +11,6 @@ namespace CasperInc.MainSite.API.Data.Models
     // Narrative - Tag Many to Many reference
     public class NarrativeTagDataModel
     {
-        [Key]
-        public Int64 UniqueId { get; set; }
-
         public Int64 NarrativeId { get; set; }
         public NarrativeDataModel NarrativeData { get; set; }
 

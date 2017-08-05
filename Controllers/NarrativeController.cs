@@ -9,6 +9,7 @@ using CasperInc.MainSite.API.Data.Models;
 using CasperInc.MainSite.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CasperInc.MainSite.API.Controllers
 {
@@ -80,7 +81,7 @@ namespace CasperInc.MainSite.API.Controllers
                 if (narrative.Keywords == null) narrative.Keywords = new List<string>();
 
                 narrative.Keywords.AddRange(
-                    _repo.GetKeywordsForNarrative(narrative.Id)
+                    _repo.GetKeywordsForNarrative(narrative.GuidId)
                 );
             }
             _logger.LogInformation("Tags Added to narrtives");
@@ -109,15 +110,15 @@ namespace CasperInc.MainSite.API.Controllers
             }
 
             var returnNarrative = Mapper.Map<NarrativeDTO>(narrativeFromRepo);
-            _logger.LogInformation($"NarrativeDataModel mapped to NarrativeDTO {returnNarrative.Id}. ");
+            _logger.LogInformation($"NarrativeDataModel mapped to NarrativeDTO {returnNarrative.GuidId}. ");
             _logger.LogTrace(JsonConvert.SerializeObject(returnNarrative));
 
             if (returnNarrative.Keywords == null) returnNarrative.Keywords = new List<string>();
             returnNarrative.Keywords.AddRange(
-                    _repo.GetKeywordsForNarrative(returnNarrative.Id)
+                    _repo.GetKeywordsForNarrative(returnNarrative.GuidId)
                 );
 
-            _logger.LogInformation($"Keywords added to NarrativeDTO {returnNarrative.Id}. ");
+            _logger.LogInformation($"Keywords added to NarrativeDTO {returnNarrative.GuidId}. ");
             _logger.LogTrace(JsonConvert.SerializeObject(returnNarrative));
 
             _logger.LogTrace("GetNarrative: Success");
@@ -128,6 +129,7 @@ namespace CasperInc.MainSite.API.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public IActionResult CreateNarrative([FromBody] NarrativeToCreateDTO narrativeForCreate)
         {
             if (narrativeForCreate == null)
@@ -203,14 +205,14 @@ namespace CasperInc.MainSite.API.Controllers
             addedNarrative.Keywords = new List<string>();
 
             addedNarrative.Keywords.AddRange(
-                    _repo.GetKeywordsForNarrative(addedNarrative.Id)
+                    _repo.GetKeywordsForNarrative(addedNarrative.GuidId)
             );
             _logger.LogInformation("Keywords appended to NarrativeDTO");
             _logger.LogTrace(JsonConvert.SerializeObject(addedNarrative));
 
             return CreatedAtRoute(
                         "GetNarrative",
-                        new { narrativeId = addedNarrative.Id },
+                        new { narrativeId = addedNarrative.GuidId },
                         addedNarrative);
 
             ;
@@ -219,6 +221,7 @@ namespace CasperInc.MainSite.API.Controllers
 
 
         [HttpPut("{narrativeId}")]
+        [Authorize]
         public IActionResult fullUpdateForNarrativeById(Guid narrativeId, [FromBody] NarrativeToUpdateDTO narrativeForUpdate)
         {
             if(narrativeForUpdate == null) return BadRequest();
@@ -273,6 +276,7 @@ namespace CasperInc.MainSite.API.Controllers
 
 
         [HttpPatch("{narrativeId}")]
+        [Authorize]
         public IActionResult partialUpdateForNarrativeById(Guid narrativeId, [FromBody] JsonPatchDocument<NarrativeToUpdateDTO> patchDoc)
         {
             // verify the request body was valid
@@ -341,6 +345,7 @@ namespace CasperInc.MainSite.API.Controllers
 
 
         [HttpDelete("{narrativeId}")]
+        [Authorize]
         public IActionResult DeleteNarrativeWithID(Guid narrativeId)
         {
             if(!_repo.NarrativeExists(narrativeId)) return NotFound();

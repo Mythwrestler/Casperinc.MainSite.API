@@ -23,7 +23,7 @@ namespace CasperInc.MainSite.API.Data.Models
         public DateTime UpdatedDate { get; set; }
 
 
-        [Required]
-        public virtual IEnumerable<NarrativeUserDataModel> Narratives { get; set; }
+        // [Required]
+        // public virtual IEnumerable<NarrativeUserDataModel> Narratives { get; set; }
     }
 }
