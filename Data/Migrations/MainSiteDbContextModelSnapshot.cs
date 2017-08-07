@@ -30,9 +30,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<short>("DisplaySequence");
 
                     b.Property<Guid>("GuidId");
@@ -51,8 +48,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("NarrativeData");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("NarrativeDataModel");
                 });
 
             modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.NarrativeTagDataModel", b =>
@@ -63,8 +58,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("UniqueId");
 
                     b.Property<DateTime>("UpdatedDate")
                         .ValueGeneratedOnAddOrUpdate();
@@ -345,23 +338,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.ToTable("OpenIddictTokens");
                 });
 
-            modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.CommentDataModel", b =>
-                {
-                    b.HasBaseType("CasperInc.MainSite.API.Data.Models.NarrativeDataModel");
-
-                    b.Property<long?>("NarrativeDataModelUniqueId");
-
-                    b.Property<long?>("ParentId");
-
-                    b.HasIndex("NarrativeDataModelUniqueId");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("CommentDataModel");
-
-                    b.HasDiscriminator().HasValue("CommentDataModel");
-                });
-
             modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.NarrativeTagDataModel", b =>
                 {
                     b.HasOne("CasperInc.MainSite.API.Data.Models.NarrativeDataModel", "NarrativeData")
@@ -428,17 +404,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.HasOne("OpenIddict.Models.OpenIddictAuthorization", "Authorization")
                         .WithMany("Tokens")
                         .HasForeignKey("AuthorizationId");
-                });
-
-            modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.CommentDataModel", b =>
-                {
-                    b.HasOne("CasperInc.MainSite.API.Data.Models.NarrativeDataModel")
-                        .WithMany("comments")
-                        .HasForeignKey("NarrativeDataModelUniqueId");
-
-                    b.HasOne("CasperInc.MainSite.API.Data.Models.CommentDataModel", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId");
                 });
         }
     }

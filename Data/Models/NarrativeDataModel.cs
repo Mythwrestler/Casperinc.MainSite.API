@@ -40,12 +40,12 @@ namespace CasperInc.MainSite.API.Data.Models {
 
         public Int16 DisplaySequence { get; set; }     
 
-        [Required]
-        [ForeignKey("UniqueId")]
-        public virtual IEnumerable<CommentDataModel> comments { get; set; }  
+        //[Required]
+        //[ForeignKey("UniqueId")]
+        //public virtual IEnumerable<CommentDataModel> comments { get; set; }  
 
         [Required]
-        [ForeignKey("UniqueId")]
+        //[ForeignKey("UniqueId")]
         public virtual IEnumerable<NarrativeTagDataModel> NarrativeTags { get; set; }
 
         // [Required]

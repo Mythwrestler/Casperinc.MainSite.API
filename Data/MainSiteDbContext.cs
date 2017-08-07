@@ -64,7 +64,7 @@ namespace CasperInc.MainSite.API.Data
         public DbSet<TagDataModel> TagData { get; set; }
         public DbSet<NarrativeTagDataModel> NarrativeTagCrossWalk { get; set; }
         // public DbSet<NarrativeUserDataModel> AuthorCrossWalk { get; set; }
-        public DbSet<CommentDataModel> CommentData { get; set; }
+        // public DbSet<CommentDataModel> CommentData { get; set; }
 
     }
 

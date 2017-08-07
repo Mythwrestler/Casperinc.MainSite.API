@@ -8,12 +8,12 @@ namespace CasperInc.MainSite.API.Data.Models
     public class CommentDataModel : NarrativeDataModel
     {
 
-        public Int64? ParentId { get; set; }
+        //public Int64? ParentId { get; set; }
 
-        [ForeignKey("ParentId")]
-        public virtual CommentDataModel Parent { get; set; }
+        //[ForeignKey("ParentId")]
+        //public virtual CommentDataModel Parent { get; set; }
 
-        public virtual IEnumerable<CommentDataModel> Children { get; set; }
+        //public virtual IEnumerable<CommentDataModel> Children { get; set; }
 
     }
 }
