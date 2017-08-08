@@ -22,8 +22,8 @@ namespace CasperInc.MainSite.API.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedDate { get; set; }
 
+        public virtual List<NarrativeDataModel> Narratives { get; set; }
 
-        // [Required]
-        // public virtual IEnumerable<NarrativeUserDataModel> Narratives { get; set; }
+        public virtual List<CommentDataModel> Comments { get; set; }
     }
 }

@@ -96,9 +96,7 @@ namespace CasperInc.MainSite.API.Data
             var user_admin = new UserDataModel()
             {
                 UserName = "Admin",
-                Email = "admin@casperinc.expert",
-                //CreatedDate = DateTime.Now,
-                //UpdatedDate = DateTime.Now
+                Email = "admin@casperinc.expert"
             };
 
 
@@ -116,9 +114,7 @@ namespace CasperInc.MainSite.API.Data
             var user_casperm = new UserDataModel()
             {
                 UserName = "casperm",
-                Email = "mathew.casper@casperinc.expert",
-                //CreatedDate = DateTime.Now,
-                //UpdatedDate = DateTime.Now
+                Email = "mythwrestler@casperinc.expert"
             };
             if (await _userManager.FindByIdAsync(user_casperm.Id) == null)
             {
@@ -131,22 +127,20 @@ namespace CasperInc.MainSite.API.Data
             await _dbContext.SaveChangesAsync();
 
 
-            // var user_caspermAdmin = new UserDataModel()
-            // {
-            //     UserName = "casperm-admin",
-            //     Email = "mathew.casper@casperinc.expert",
-            //     //CreatedDate = DateTime.Now,
-            //     //UpdatedDate = DateTime.Now
-            // };
-            // if (await _userManager.FindByIdAsync(user_caspermAdmin.Id) == null)
-            // {
-            //     await _userManager.CreateAsync(user_caspermAdmin, "tempPass1sLegit!");
-            //     await _userManager.AddToRoleAsync(user_caspermAdmin, role_Administrators);
-            //     //Mark Email as confirmed and remove Account Lock
-            //     user_caspermAdmin.EmailConfirmed = true;
-            //     user_caspermAdmin.LockoutEnabled = false;
-            // }
-            // await _dbContext.SaveChangesAsync();
+            var user_caspermAdmin = new UserDataModel()
+            {
+                UserName = "casperm-admin",
+                Email = "mathew.casper@casperinc.expert"
+            };
+            if (await _userManager.FindByIdAsync(user_caspermAdmin.Id) == null)
+            {
+                await _userManager.CreateAsync(user_caspermAdmin, "tempPass1sLegit!");
+                await _userManager.AddToRoleAsync(user_caspermAdmin, role_Administrators);
+                //Mark Email as confirmed and remove Account Lock
+                user_caspermAdmin.EmailConfirmed = true;
+                user_caspermAdmin.LockoutEnabled = false;
+            }
+            await _dbContext.SaveChangesAsync();
         }
 
 
@@ -184,6 +178,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 1,
                 GuidId = new Guid("f6d78a09-fcc1-4a56-ab48-5ff9f2b81c10"),
+                UserId = user.Id,
                 Title = "New Site!!! (1 of 2)",
                 Type = NarrativeTypes.News,
                 Description = "Welcome to the new Site!",
@@ -196,6 +191,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 2,
                 GuidId = new Guid("d12d4524-01b0-46a4-bb0b-a5c4ad522003"),
+                UserId = user.Id,
                 Title = "New Site!!! (2 of 2)",
                 Type = NarrativeTypes.News,
                 Description = "Welcome to the new Site!",
@@ -214,6 +210,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 3,
                 GuidId = new Guid("c860838d-b9cc-49da-8924-283703318733"),
+                UserId = user.Id,
                 Title = "About Me",
                 Type = NarrativeTypes.About,
                 Description = "A breif biography of Me.",
@@ -228,6 +225,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 4,
                 GuidId = new Guid("809d7a83-d583-4b1f-ae01-c2e17185f64c"),
+                UserId = user.Id,
                 Title = "About The Site",
                 Type = NarrativeTypes.About,
                 Description = "A breif biography of the purpose of the site.",
@@ -241,6 +239,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 5,
                 GuidId = new Guid("53c686c4-e865-4dde-83c7-ef7e969339e6"),
+                UserId = user.Id,
                 Title = "Running on Linux",
                 Type = NarrativeTypes.About,
                 Description = "An explination of the operating environment.",
@@ -254,6 +253,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 6,
                 GuidId = new Guid("54ee3ce8-0f1e-4fee-b7e2-f1123bd09c2c"),
+                UserId = user.Id,
                 Title = "Backed by .Net Core",
                 Type = NarrativeTypes.About,
                 Description = "A description of the backend services.",
@@ -270,6 +270,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 7,
                 GuidId = new Guid("e5ea0de1-b2ab-49b0-be53-8a063a7b7790"),
+                UserId = user.Id,
                 Title = "Angular 2",
                 Type = NarrativeTypes.About,
                 Description = "A modern user experience.",
@@ -293,14 +294,6 @@ namespace CasperInc.MainSite.API.Data
                 _dbContext.Add(narraitve);
                 _dbContext.Add(narrativeTag);
 
-                // var author = new NarrativeUserDataModel()
-                // {
-                //     NarrativeId = narraitve.UniqueId,
-                //     NarrativeData = narraitve,
-                //     UserId = user.Id,
-				// 	UserData = user
-                // };
-				// _dbContext.Add(author);
 
             }
             foreach (NarrativeDataModel narraitve in newsItems)
@@ -314,14 +307,6 @@ namespace CasperInc.MainSite.API.Data
                 };
                 _dbContext.Add(narraitve);
                 _dbContext.Add(narrativeTag);
-                // var author = new NarrativeUserDataModel()
-                // {
-                //     NarrativeId = narraitve.UniqueId,
-                //     NarrativeData = narraitve,
-                //     UserId = user.Id,
-				// 	UserData = user
-                // };
-				// _dbContext.Add(author);
             }
             await _dbContext.SaveChangesAsync();
         }

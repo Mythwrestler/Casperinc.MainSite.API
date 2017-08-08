@@ -16,9 +16,11 @@ namespace CasperInc.MainSite.API.DTOModels
         public string Description { get; set;}
         [Required]
         public string BodyHtml { get; set;}
-        public Int16 DisplaySequence { get; set; }   
+        public Int16? DisplaySequence { get; set; }   
         [Required]
         public List<string> Keywords { get; set; }
+        public string UserId{ get; set;}
+        
     }
 
 }

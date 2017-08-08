@@ -9,9 +9,10 @@ using CasperInc.MainSite.Helpers;
 namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    partial class MainSiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170808015354_MySQL-v003")]
+    partial class MySQLv003
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");

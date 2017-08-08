@@ -14,7 +14,7 @@ using CasperInc.MainSite.API.Data;
 using CasperInc.MainSite.API.Data.Models;
 using Microsoft.Extensions.Configuration;
 
-namespace CasperInc.MainSite.Helpers
+namespace CasperInc.MainSite.Middleware
 {
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
     public class JwtTokenProvider

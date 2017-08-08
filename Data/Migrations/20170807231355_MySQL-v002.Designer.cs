@@ -9,9 +9,10 @@ using CasperInc.MainSite.Helpers;
 namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    partial class MainSiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170807231355_MySQL-v002")]
+    partial class MySQLv002
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");
@@ -26,7 +27,7 @@ namespace CasperInc.MainSite.API.Data.Migrations
 
                     b.Property<Guid>("GuidId");
 
-                    b.Property<long>("NarrativeId");
+                    b.Property<long?>("NarrativeId");
 
                     b.Property<long?>("ParentId");
 
@@ -384,8 +385,7 @@ namespace CasperInc.MainSite.API.Data.Migrations
                 {
                     b.HasOne("CasperInc.MainSite.API.Data.Models.NarrativeDataModel", "Narrative")
                         .WithMany("Comments")
-                        .HasForeignKey("NarrativeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("NarrativeId");
 
                     b.HasOne("CasperInc.MainSite.API.Data.Models.CommentDataModel", "Parent")
                         .WithMany("Children")

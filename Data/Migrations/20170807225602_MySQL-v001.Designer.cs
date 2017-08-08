@@ -9,13 +9,50 @@ using CasperInc.MainSite.Helpers;
 namespace CasperInc.MainSite.API.Data.Migrations
 {
     [DbContext(typeof(MainSiteDbContext))]
-    [Migration("20170805190346_MySQL-v001")]
+    [Migration("20170807225602_MySQL-v001")]
     partial class MySQLv001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");
+
+            modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.CommentDataModel", b =>
+                {
+                    b.Property<long>("UniqueId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("GuidId");
+
+                    b.Property<long?>("NarrativeId");
+
+                    b.Property<long?>("ParentId");
+
+                    b.Property<string>("Text")
+                        .IsRequired();
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("UniqueId");
+
+                    b.HasIndex("GuidId")
+                        .IsUnique();
+
+                    b.HasIndex("NarrativeId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CommentData");
+                });
 
             modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.NarrativeDataModel", b =>
                 {
@@ -43,10 +80,14 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .ValueGeneratedOnAddOrUpdate();
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("UniqueId");
 
                     b.HasIndex("GuidId")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("NarrativeData");
                 });
@@ -337,6 +378,28 @@ namespace CasperInc.MainSite.API.Data.Migrations
                     b.HasIndex("AuthorizationId");
 
                     b.ToTable("OpenIddictTokens");
+                });
+
+            modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.CommentDataModel", b =>
+                {
+                    b.HasOne("CasperInc.MainSite.API.Data.Models.NarrativeDataModel", "Narrative")
+                        .WithMany("Comments")
+                        .HasForeignKey("NarrativeId");
+
+                    b.HasOne("CasperInc.MainSite.API.Data.Models.CommentDataModel", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
+
+                    b.HasOne("CasperInc.MainSite.API.Data.Models.UserDataModel", "Author")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.NarrativeDataModel", b =>
+                {
+                    b.HasOne("CasperInc.MainSite.API.Data.Models.UserDataModel", "Author")
+                        .WithMany("Narratives")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("CasperInc.MainSite.API.Data.Models.NarrativeTagDataModel", b =>

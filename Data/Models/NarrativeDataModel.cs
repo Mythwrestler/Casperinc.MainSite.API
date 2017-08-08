@@ -38,22 +38,19 @@ namespace CasperInc.MainSite.API.Data.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedOn  {get; set;}
 
-        public Int16 DisplaySequence { get; set; }     
-
-        //[Required]
-        //[ForeignKey("UniqueId")]
-        //public virtual IEnumerable<CommentDataModel> comments { get; set; }  
+        public Int16? DisplaySequence { get; set; } 
+        
+        [Required]
+        public string UserId { get; set; }    
 
         [Required]
-        //[ForeignKey("UniqueId")]
         public virtual IEnumerable<NarrativeTagDataModel> NarrativeTags { get; set; }
 
-        // [Required]
-        // [ForeignKey("UserId")]
-        // public virtual IEnumerable<NarrativeUserDataModel> Authors { get; set; }
+        [ForeignKey("UserId")]
+        public virtual UserDataModel Author { get; set; }
+
+        public virtual List<CommentDataModel> Comments { get; set; }
 
     }
-
-
 
 }

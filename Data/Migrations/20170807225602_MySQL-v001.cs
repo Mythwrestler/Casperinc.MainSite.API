@@ -9,28 +9,6 @@ namespace CasperInc.MainSite.API.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "NarrativeData",
-                columns: table => new
-                {
-                    UniqueId = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    BodyHtml = table.Column<string>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    Description = table.Column<string>(nullable: false),
-                    DisplaySequence = table.Column<short>(nullable: false),
-                    GuidId = table.Column<Guid>(nullable: false),
-                    Title = table.Column<string>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
-                    UpdatedOn = table.Column<DateTime>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NarrativeData", x => x.UniqueId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TagData",
                 columns: table => new
                 {
@@ -140,31 +118,32 @@ namespace CasperInc.MainSite.API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NarrativeTagCrossWalk",
+                name: "NarrativeData",
                 columns: table => new
                 {
-                    NarrativeId = table.Column<long>(nullable: false),
-                    TagId = table.Column<long>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false)
+                    UniqueId = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAdd", true),
-                    UpdatedDate = table.Column<DateTime>(nullable: false)
-                        .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true)
+                    BodyHtml = table.Column<string>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    Description = table.Column<string>(nullable: false),
+                    DisplaySequence = table.Column<short>(nullable: false),
+                    GuidId = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    UpdatedOn = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NarrativeTagCrossWalk", x => new { x.NarrativeId, x.TagId });
+                    table.PrimaryKey("PK_NarrativeData", x => x.UniqueId);
                     table.ForeignKey(
-                        name: "FK_NarrativeTagCrossWalk_NarrativeData_NarrativeId",
-                        column: x => x.NarrativeId,
-                        principalTable: "NarrativeData",
-                        principalColumn: "UniqueId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_NarrativeTagCrossWalk_TagData_TagId",
-                        column: x => x.TagId,
-                        principalTable: "TagData",
-                        principalColumn: "UniqueId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_NarrativeData_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -275,6 +254,73 @@ namespace CasperInc.MainSite.API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CommentData",
+                columns: table => new
+                {
+                    UniqueId = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    CreatedOn = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    GuidId = table.Column<Guid>(nullable: false),
+                    NarrativeId = table.Column<long>(nullable: true),
+                    ParentId = table.Column<long>(nullable: true),
+                    Text = table.Column<string>(nullable: false),
+                    UpdatedOn = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommentData", x => x.UniqueId);
+                    table.ForeignKey(
+                        name: "FK_CommentData_NarrativeData_NarrativeId",
+                        column: x => x.NarrativeId,
+                        principalTable: "NarrativeData",
+                        principalColumn: "UniqueId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CommentData_CommentData_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "CommentData",
+                        principalColumn: "UniqueId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CommentData_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NarrativeTagCrossWalk",
+                columns: table => new
+                {
+                    NarrativeId = table.Column<long>(nullable: false),
+                    TagId = table.Column<long>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    UpdatedDate = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NarrativeTagCrossWalk", x => new { x.NarrativeId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_NarrativeTagCrossWalk_NarrativeData_NarrativeId",
+                        column: x => x.NarrativeId,
+                        principalTable: "NarrativeData",
+                        principalColumn: "UniqueId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NarrativeTagCrossWalk_TagData_TagId",
+                        column: x => x.TagId,
+                        principalTable: "TagData",
+                        principalColumn: "UniqueId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictTokens",
                 columns: table => new
                 {
@@ -303,10 +349,36 @@ namespace CasperInc.MainSite.API.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CommentData_GuidId",
+                table: "CommentData",
+                column: "GuidId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentData_NarrativeId",
+                table: "CommentData",
+                column: "NarrativeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentData_ParentId",
+                table: "CommentData",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentData_UserId",
+                table: "CommentData",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NarrativeData_GuidId",
                 table: "NarrativeData",
                 column: "GuidId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NarrativeData_UserId",
+                table: "NarrativeData",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NarrativeTagCrossWalk_TagId",
@@ -387,6 +459,9 @@ namespace CasperInc.MainSite.API.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CommentData");
+
+            migrationBuilder.DropTable(
                 name: "NarrativeTagCrossWalk");
 
             migrationBuilder.DropTable(
@@ -420,10 +495,10 @@ namespace CasperInc.MainSite.API.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
-                name: "OpenIddictAuthorizations");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");
