@@ -10,6 +10,7 @@ using CasperInc.MainSite.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CasperInc.MainSite.API.Controllers
 {
@@ -156,6 +157,7 @@ namespace CasperInc.MainSite.API.Controllers
             }
 
             var newNarrative = Mapper.Map<NarrativeDataModel>(narrativeForCreate);
+            newNarrative.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             if (newNarrative == null)
             {

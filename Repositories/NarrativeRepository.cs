@@ -29,18 +29,15 @@ namespace CasperInc.MainSite.API.Repositories
                           .Select(j => j.NarrativeData)
                           .AsEnumerable();
 
-
             return narrativeListFromDb;
 
         }
-
 
 
         public bool NarrativeExists(Guid narrativeId)
         {
             return _dbContext.NarrativeData.Any(n => n.GuidId == narrativeId);
         }
-
 
 
         public PagedList<NarrativeDataModel> GetNarrativeList(NarrativeResourceParameters parms)
@@ -60,7 +57,6 @@ namespace CasperInc.MainSite.API.Repositories
             }
             else
             {
-
                 narrativesBeforePaging = _dbContext.NarrativeData
                                                 .OrderBy(n => n.CreatedOn)
                                                 .AsQueryable();
