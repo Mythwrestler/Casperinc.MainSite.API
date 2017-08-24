@@ -25,6 +25,7 @@ using OpenIddict.Models;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using CasperInc.MainSite.Middleware;
 
 namespace CasperInc.MainSite.API
 {
@@ -225,9 +226,9 @@ namespace CasperInc.MainSite.API
 				Authority = Configuration["Authentication:OpenIddict:Authority"],
                 TokenValidationParameters = new TokenValidationParameters()
                 {
-                    //IssuerSigningKey = JwtTokenProvider.SecurityKey,
-                    //ValidateIssuerSigningKey = true,
-                    //ValidIssuer = JwtTokenProvider.Issuer,
+                    IssuerSigningKey = JwtTokenProvider.SecurityKey,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = JwtTokenProvider.Issuer,
                     ValidateIssuer = false,
                     ValidateAudience = false
                 }

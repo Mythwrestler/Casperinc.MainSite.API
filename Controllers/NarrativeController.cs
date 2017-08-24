@@ -157,7 +157,9 @@ namespace CasperInc.MainSite.API.Controllers
             }
 
             var newNarrative = Mapper.Map<NarrativeDataModel>(narrativeForCreate);
-            newNarrative.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var claimTest1 = User.FindFirst("name")?.Value;
+            var claimTest2 = User.FindFirst(ClaimTypes.Name)?.Value;
+            var claimTest3 = User.FindFirst("username")?.Value;
 
             if (newNarrative == null)
             {

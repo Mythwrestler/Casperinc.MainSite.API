@@ -41,7 +41,7 @@ namespace CasperInc.MainSite.Middleware
         private static readonly string PrivateKey = "private_key_1234567890";
         public static readonly SymmetricSecurityKey SecurityKey =
             new SymmetricSecurityKey(Encoding.ASCII.GetBytes(PrivateKey));
-        public static readonly string Issuer = "OpenGameListWebApp";
+        public static readonly string Issuer = "Casperinc.MainSite.API";
         public static string TokenEndPoint = "/mainsite/api/connect/token";
         private IConfigurationRoot _configuration;
 

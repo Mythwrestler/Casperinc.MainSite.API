@@ -80,6 +80,11 @@ namespace OpenGameList.Controllers
 				OpenIdConnectConstants.Destinations.AccessToken,
 				OpenIdConnectConstants.Destinations.IdentityToken);
 
+			identity.AddClaim(OpenIdConnectConstants.Claims.Username, request.Username,
+				OpenIdConnectConstants.Destinations.AccessToken,
+				OpenIdConnectConstants.Destinations.IdentityToken);
+
+
 			// Create a new authentication ticket holding the user identity.
 			var ticket = new AuthenticationTicket(
 				new ClaimsPrincipal(identity),
