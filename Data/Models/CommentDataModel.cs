@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CasperInc.MainSite.API.Data.Models
+namespace Casperinc.MainSite.API.Data.Models
 {
     public class CommentDataModel
     {
@@ -35,8 +35,8 @@ namespace CasperInc.MainSite.API.Data.Models
         [ForeignKey("NarrativeId")]
         public virtual NarrativeDataModel Narrative { get; set; }
 
-        [ForeignKey("UserId")]
-        public virtual UserDataModel Author { get; set; }
+        // [ForeignKey("UserId")]
+        // public virtual UserDataModel Author { get; set; }
 
         [ForeignKey("ParentId")]
         public virtual CommentDataModel Parent { get; set; }

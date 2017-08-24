@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using CasperInc.MainSite.Helpers;
+using Casperinc.MainSite.Helpers;
 
-namespace CasperInc.MainSite.API.Data.Models {
+namespace Casperinc.MainSite.API.Data.Models {
 
 
     public class NarrativeDataModel {
@@ -46,8 +46,8 @@ namespace CasperInc.MainSite.API.Data.Models {
         [Required]
         public virtual IEnumerable<NarrativeTagDataModel> NarrativeTags { get; set; }
 
-        [ForeignKey("UserId")]
-        public virtual UserDataModel Author { get; set; }
+        //[ForeignKey("UserId")]
+        //public virtual UserDataModel Author { get; set; }
 
         public virtual List<CommentDataModel> Comments { get; set; }
 

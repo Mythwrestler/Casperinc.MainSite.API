@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using AutoMapper;
-using CasperInc.MainSite.API.DTOModels;
-using CasperInc.MainSite.API.Repositories;
-using CasperInc.MainSite.API.Data.Models;
-using CasperInc.MainSite.Helpers;
+using Casperinc.MainSite.API.DTOModels;
+using Casperinc.MainSite.API.Repositories;
+using Casperinc.MainSite.API.Data.Models;
+using Casperinc.MainSite.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using AspNet.Security.OAuth.Introspection;
+using System.Linq;
 
-namespace CasperInc.MainSite.API.Controllers
+namespace Casperinc.MainSite.API.Controllers
 {
     [Route("mainsite/api/narratives")]
     public class NarrativeController : Controller
@@ -34,6 +36,7 @@ namespace CasperInc.MainSite.API.Controllers
         public IActionResult GetNarratives(NarrativeResourceParameters parms)
         {
             _logger.LogInformation($"Get Narratives with parms: Keyword Filter:{parms.KeywordFilter} | Page Number:{parms.PageNumber} | Page Size:{parms.PageSize}");
+
 
             var narrativesFromRepo = _repo.GetNarrativeList(parms);
             _logger.LogInformation($"IEnumerable<NarritveDataModel> Retrieved from Repo");
@@ -130,7 +133,7 @@ namespace CasperInc.MainSite.API.Controllers
 
 
         [HttpPost]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = OAuthIntrospectionDefaults.AuthenticationScheme)]
         public IActionResult CreateNarrative([FromBody] NarrativeToCreateDTO narrativeForCreate)
         {
             if (narrativeForCreate == null)
@@ -157,9 +160,7 @@ namespace CasperInc.MainSite.API.Controllers
             }
 
             var newNarrative = Mapper.Map<NarrativeDataModel>(narrativeForCreate);
-            var claimTest1 = User.FindFirst("name")?.Value;
-            var claimTest2 = User.FindFirst(ClaimTypes.Name)?.Value;
-            var claimTest3 = User.FindFirst("username")?.Value;
+            newNarrative.UserId = User.FindFirst("sub").Value;
 
             if (newNarrative == null)
             {
@@ -225,7 +226,7 @@ namespace CasperInc.MainSite.API.Controllers
 
 
         [HttpPut("{narrativeId}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = OAuthIntrospectionDefaults.AuthenticationScheme)]
         public IActionResult fullUpdateForNarrativeById(Guid narrativeId, [FromBody] NarrativeToUpdateDTO narrativeForUpdate)
         {
             if(narrativeForUpdate == null) return BadRequest();
@@ -280,7 +281,7 @@ namespace CasperInc.MainSite.API.Controllers
 
 
         [HttpPatch("{narrativeId}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = OAuthIntrospectionDefaults.AuthenticationScheme)]
         public IActionResult partialUpdateForNarrativeById(Guid narrativeId, [FromBody] JsonPatchDocument<NarrativeToUpdateDTO> patchDoc)
         {
             // verify the request body was valid
@@ -349,7 +350,7 @@ namespace CasperInc.MainSite.API.Controllers
 
 
         [HttpDelete("{narrativeId}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = OAuthIntrospectionDefaults.AuthenticationScheme)]
         public IActionResult DeleteNarrativeWithID(Guid narrativeId)
         {
             if(!_repo.NarrativeExists(narrativeId)) return NotFound();

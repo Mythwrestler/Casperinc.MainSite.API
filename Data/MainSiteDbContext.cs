@@ -1,19 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 
-using CasperInc.MainSite.API.Data.Models;
+using Casperinc.MainSite.API.Data.Models;
 using System;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CasperInc.MainSite.API.Data
+namespace Casperinc.MainSite.API.Data
 {
 
-    public class MainSiteDbContext : IdentityDbContext<UserDataModel>
+    public class MainSiteDbContext : DbContext
     {
 
         public MainSiteDbContext(DbContextOptions options) : base(options)
         {
-            Database.Migrate();
+            //Database.Migrate();
         }
 
 
@@ -34,11 +34,11 @@ namespace CasperInc.MainSite.API.Data
                         .HasIndex(c => c.GuidId)
                         .IsUnique();
 
-            modelBuilder.Entity<CommentDataModel>()
-                        .HasOne(c => c.Author)
-                        .WithMany(u => u.Comments)
-                        .HasForeignKey(c => c.UserId)
-                        .OnDelete(DeleteBehavior.Restrict);
+            // modelBuilder.Entity<CommentDataModel>()
+            //             .HasOne(c => c.Author)
+            //             .WithMany(u => u.Comments)
+            //             .HasForeignKey(c => c.UserId)
+            //             .OnDelete(DeleteBehavior.Restrict);
                         
             modelBuilder.Entity<CommentDataModel>()
                         .HasOne(c => c.Narrative)
@@ -52,22 +52,22 @@ namespace CasperInc.MainSite.API.Data
                         .HasMany(c => c.Children)
                         .WithOne(c => c.Parent);   
 
-            modelBuilder.Entity<NarrativeDataModel>()
-                        .HasOne(i => i.Author)
-                        .WithMany(u => u.Narratives);
+            // modelBuilder.Entity<NarrativeDataModel>()
+            //             .HasOne(i => i.Author)
+            //             .WithMany(u => u.Narratives);
 
             modelBuilder.Entity<NarrativeDataModel>()
                         .HasMany(i => i.Comments)
                         .WithOne(c => c.Narrative);
 
-            modelBuilder.Entity<UserDataModel>()
-                        .HasMany(u => u.Narratives)
-                        .WithOne(i => i.Author);
+            // modelBuilder.Entity<UserDataModel>()
+            //             .HasMany(u => u.Narratives)
+            //             .WithOne(i => i.Author);
 
-            modelBuilder.Entity<UserDataModel>()
-                        .HasMany(u => u.Comments)
-                        .WithOne(c => c.Author)
-                        .HasPrincipalKey(u => u.Id);
+            // modelBuilder.Entity<UserDataModel>()
+            //             .HasMany(u => u.Comments)
+            //             .WithOne(c => c.Author)
+            //             .HasPrincipalKey(u => u.Id);
 
             modelBuilder.Entity<TagDataModel>()
                         .HasIndex(t => t.KeyWord)
@@ -103,7 +103,7 @@ namespace CasperInc.MainSite.API.Data
         public DbSet<NarrativeDataModel> NarrativeData { get; set; }
         public DbSet<TagDataModel> TagData { get; set; }
         public DbSet<NarrativeTagDataModel> NarrativeTagCrossWalk { get; set; }
-         public DbSet<CommentDataModel> CommentData { get; set; }
+        public DbSet<CommentDataModel> CommentData { get; set; }
 
     }
 

@@ -2,30 +2,30 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using CasperInc.MainSite.API.Data.Models;
+using Casperinc.MainSite.API.Data.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using CasperInc.MainSite.Helpers;
+using Casperinc.MainSite.Helpers;
 
-namespace CasperInc.MainSite.API.Data
+namespace Casperinc.MainSite.API.Data
 {
 
     public class DbSeeder
     {
 
         private MainSiteDbContext _dbContext;
-        private RoleManager<IdentityRole> _roleManager;
-        private UserManager<UserDataModel> _userManager;
+        // private RoleManager<IdentityRole> _roleManager;
+        // private UserManager<UserDataModel> _userManager;
 
-        public DbSeeder(MainSiteDbContext dbContext,
-            RoleManager<IdentityRole> roleManager,
-            UserManager<UserDataModel> userManager
+        public DbSeeder(MainSiteDbContext dbContext
+            // RoleManager<IdentityRole> roleManager,
+            // UserManager<UserDataModel> userManager
         )
         {
             _dbContext = dbContext;
-            _roleManager = roleManager;
-            _userManager = userManager;
+            // _roleManager = roleManager;
+            // _userManager = userManager;
         }
 
 
@@ -34,13 +34,13 @@ namespace CasperInc.MainSite.API.Data
             _dbContext.NarrativeTagCrossWalk.RemoveRange(_dbContext.NarrativeTagCrossWalk);
             _dbContext.NarrativeData.RemoveRange(_dbContext.NarrativeData);
             _dbContext.TagData.RemoveRange(_dbContext.TagData);
-            _dbContext.UserClaims.RemoveRange(_dbContext.UserClaims);
-            _dbContext.UserLogins.RemoveRange(_dbContext.UserLogins);
-            _dbContext.UserRoles.RemoveRange(_dbContext.UserRoles);
-            _dbContext.UserTokens.RemoveRange(_dbContext.UserTokens);
-            _dbContext.Users.RemoveRange(_dbContext.Users);
-            _dbContext.RoleClaims.RemoveRange(_dbContext.RoleClaims);
-            _dbContext.Roles.RemoveRange(_dbContext.Roles);
+            // _dbContext.UserClaims.RemoveRange(_dbContext.UserClaims);
+            // _dbContext.UserLogins.RemoveRange(_dbContext.UserLogins);
+            // _dbContext.UserRoles.RemoveRange(_dbContext.UserRoles);
+            // _dbContext.UserTokens.RemoveRange(_dbContext.UserTokens);
+            // _dbContext.Users.RemoveRange(_dbContext.Users);
+            // _dbContext.RoleClaims.RemoveRange(_dbContext.RoleClaims);
+            // _dbContext.Roles.RemoveRange(_dbContext.Roles);
 
 
             await _dbContext.SaveChangesAsync();
@@ -53,10 +53,10 @@ namespace CasperInc.MainSite.API.Data
             _dbContext.Database.EnsureCreated();
 
 
-            if (await _dbContext.Users.CountAsync() == 0)
-            {
-                await CreateUserAsync();
-            }
+            // if (await _dbContext.Users.CountAsync() == 0)
+            // {
+            //     await CreateUserAsync();
+            // }
 
             if (await _dbContext.TagData.CountAsync() == 0)
             {
@@ -72,76 +72,76 @@ namespace CasperInc.MainSite.API.Data
         }
 
 
-        private async Task CreateUserAsync()
-        {
+        // private async Task CreateUserAsync()
+        // {
 
-            string role_Administrators = "Administrators";
-            string role_Registered = "Registered";
+        //     // string role_Administrators = "Administrators";
+        //     // string role_Registered = "Registered";
 
-            // Create Roles
-            if (!await _roleManager.RoleExistsAsync(role_Administrators))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(role_Administrators));
-                await _dbContext.SaveChangesAsync();
-            }
-            if (!await _roleManager.RoleExistsAsync(role_Registered))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(role_Registered));
-                await _dbContext.SaveChangesAsync();
-            }
-
-
-
-            // Create the "Admin" ApplicationUser account (if it does not exist)
-            var user_admin = new UserDataModel()
-            {
-                UserName = "Admin",
-                Email = "admin@casperinc.expert"
-            };
+        //     // Create Roles
+        //     // if (!await _roleManager.RoleExistsAsync(role_Administrators))
+        //     // {
+        //     //     await _roleManager.CreateAsync(new IdentityRole(role_Administrators));
+        //     //     await _dbContext.SaveChangesAsync();
+        //     // }
+        //     // if (!await _roleManager.RoleExistsAsync(role_Registered))
+        //     // {
+        //     //     await _roleManager.CreateAsync(new IdentityRole(role_Registered));
+        //     //     await _dbContext.SaveChangesAsync();
+        //     // }
 
 
-            // Insert "Admin" into the Database and assign "Administrator" Role
-            if (await _userManager.FindByIdAsync(user_admin.Id) == null)
-            {
-                await _userManager.CreateAsync(user_admin, "Pass4Admin");
-                await _userManager.AddToRoleAsync(user_admin, role_Administrators);
-                //Mark Email as confirmed and remove Account Lock
-                user_admin.EmailConfirmed = true;
-                user_admin.LockoutEnabled = false;
-            }
-            await _dbContext.SaveChangesAsync();
 
-            var user_casperm = new UserDataModel()
-            {
-                UserName = "casperm",
-                Email = "mythwrestler@casperinc.expert"
-            };
-            if (await _userManager.FindByIdAsync(user_casperm.Id) == null)
-            {
-                await _userManager.CreateAsync(user_casperm, "tempPass1sLegit!");
-                await _userManager.AddToRoleAsync(user_casperm, role_Registered);
-                //Mark Email as confirmed and remove Account Lock
-                user_casperm.EmailConfirmed = true;
-                user_casperm.LockoutEnabled = false;
-            }
-            await _dbContext.SaveChangesAsync();
+        //     // Create the "Admin" ApplicationUser account (if it does not exist)
+        //     var user_admin = new UserDataModel()
+        //     {
+        //         UserName = "Admin",
+        //         Email = "admin@Casperinc.expert"
+        //     };
 
 
-            var user_caspermAdmin = new UserDataModel()
-            {
-                UserName = "casperm-admin",
-                Email = "mathew.casper@casperinc.expert"
-            };
-            if (await _userManager.FindByIdAsync(user_caspermAdmin.Id) == null)
-            {
-                await _userManager.CreateAsync(user_caspermAdmin, "tempPass1sLegit!");
-                await _userManager.AddToRoleAsync(user_caspermAdmin, role_Administrators);
-                //Mark Email as confirmed and remove Account Lock
-                user_caspermAdmin.EmailConfirmed = true;
-                user_caspermAdmin.LockoutEnabled = false;
-            }
-            await _dbContext.SaveChangesAsync();
-        }
+        //     // Insert "Admin" into the Database and assign "Administrator" Role
+        //     if (await _userManager.FindByIdAsync(user_admin.Id) == null)
+        //     {
+        //         await _userManager.CreateAsync(user_admin, "Pass4Admin");
+        //         await _userManager.AddToRoleAsync(user_admin, role_Administrators);
+        //         //Mark Email as confirmed and remove Account Lock
+        //         user_admin.EmailConfirmed = true;
+        //         user_admin.LockoutEnabled = false;
+        //     }
+        //     await _dbContext.SaveChangesAsync();
+
+        //     var user_casperm = new UserDataModel()
+        //     {
+        //         UserName = "casperm",
+        //         Email = "mythwrestler@Casperinc.expert"
+        //     };
+        //     if (await _userManager.FindByIdAsync(user_casperm.Id) == null)
+        //     {
+        //         await _userManager.CreateAsync(user_casperm, "tempPass1sLegit!");
+        //         await _userManager.AddToRoleAsync(user_casperm, role_Registered);
+        //         //Mark Email as confirmed and remove Account Lock
+        //         user_casperm.EmailConfirmed = true;
+        //         user_casperm.LockoutEnabled = false;
+        //     }
+        //     await _dbContext.SaveChangesAsync();
+
+
+        //     var user_caspermAdmin = new UserDataModel()
+        //     {
+        //         UserName = "casperm-admin",
+        //         Email = "mathew.casper@Casperinc.expert"
+        //     };
+        //     if (await _userManager.FindByIdAsync(user_caspermAdmin.Id) == null)
+        //     {
+        //         await _userManager.CreateAsync(user_caspermAdmin, "tempPass1sLegit!");
+        //         await _userManager.AddToRoleAsync(user_caspermAdmin, role_Administrators);
+        //         //Mark Email as confirmed and remove Account Lock
+        //         user_caspermAdmin.EmailConfirmed = true;
+        //         user_caspermAdmin.LockoutEnabled = false;
+        //     }
+        //     await _dbContext.SaveChangesAsync();
+        // }
 
 
         private async Task CreateTagData()
@@ -168,7 +168,7 @@ namespace CasperInc.MainSite.API.Data
 
         private async Task CreateNarrativeData()
         {
-            UserDataModel user = await _dbContext.Users.Where(u => u.UserName == "casperm").FirstOrDefaultAsync();
+            var user = "e717efcd-a7b6-456b-ad39-ae0c6fb58d2a";
 
             //Create Sample News Narratives
             List<NarrativeDataModel> newsItems = new List<NarrativeDataModel>();
@@ -178,7 +178,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 1,
                 GuidId = new Guid("f6d78a09-fcc1-4a56-ab48-5ff9f2b81c10"),
-                UserId = user.Id,
+                UserId = user,
                 Title = "New Site!!! (1 of 2)",
                 Type = NarrativeTypes.News,
                 Description = "Welcome to the new Site!",
@@ -191,7 +191,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 2,
                 GuidId = new Guid("d12d4524-01b0-46a4-bb0b-a5c4ad522003"),
-                UserId = user.Id,
+                UserId = user,
                 Title = "New Site!!! (2 of 2)",
                 Type = NarrativeTypes.News,
                 Description = "Welcome to the new Site!",
@@ -210,7 +210,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 3,
                 GuidId = new Guid("c860838d-b9cc-49da-8924-283703318733"),
-                UserId = user.Id,
+                UserId = user,
                 Title = "About Me",
                 Type = NarrativeTypes.About,
                 Description = "A breif biography of Me.",
@@ -225,7 +225,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 4,
                 GuidId = new Guid("809d7a83-d583-4b1f-ae01-c2e17185f64c"),
-                UserId = user.Id,
+                UserId = user,
                 Title = "About The Site",
                 Type = NarrativeTypes.About,
                 Description = "A breif biography of the purpose of the site.",
@@ -239,7 +239,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 5,
                 GuidId = new Guid("53c686c4-e865-4dde-83c7-ef7e969339e6"),
-                UserId = user.Id,
+                UserId = user,
                 Title = "Running on Linux",
                 Type = NarrativeTypes.About,
                 Description = "An explination of the operating environment.",
@@ -253,7 +253,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 6,
                 GuidId = new Guid("54ee3ce8-0f1e-4fee-b7e2-f1123bd09c2c"),
-                UserId = user.Id,
+                UserId = user,
                 Title = "Backed by .Net Core",
                 Type = NarrativeTypes.About,
                 Description = "A description of the backend services.",
@@ -270,7 +270,7 @@ namespace CasperInc.MainSite.API.Data
             {
                 UniqueId = 7,
                 GuidId = new Guid("e5ea0de1-b2ab-49b0-be53-8a063a7b7790"),
-                UserId = user.Id,
+                UserId = user,
                 Title = "Angular 2",
                 Type = NarrativeTypes.About,
                 Description = "A modern user experience.",

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasperInc.MainSite.API.Data.Models
+namespace Casperinc.MainSite.API.Data.Models
 {
     // Narrative - Tag Many to Many reference
     public class NarrativeTagDataModel

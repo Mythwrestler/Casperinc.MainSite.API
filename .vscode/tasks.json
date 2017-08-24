@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/CasperInc.MainSite.API.sln"
+                "${workspaceRoot}/Casperinc.MainSite.API.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

@@ -1,28 +1,30 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
-namespace CasperInc.MainSite.API
+namespace Casperinc.MainSite.API
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-                .AddCommandLine(args)
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
-                .Build();
+            BuildWebHost(args).Run();
+        }
 
-            var host = new WebHostBuilder()
-                .UseConfiguration(config)
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                //.UseUrls("HTTP://*:6054")
-                .UseStartup<Startup>()
-                .Build();
+        public static IWebHost BuildWebHost(string[] args) {
 
-            host.Run();
+            var configuration = new ConfigurationBuilder().AddCommandLine(args).Build();
+
+            return WebHost.CreateDefaultBuilder(args)
+                    .UseConfiguration(configuration)
+                    .UseStartup<Startup>()
+                    .Build();
         }
     }
 }

@@ -7,23 +7,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace CasperInc.MainSite.API.Data.Models
+namespace Casperinc.MainSite.API.Data.Models
 {
-    public class UserDataModel : IdentityUser
-    {
+    // public class UserDataModel : IdentityUser
+    // {
 
-        public string DisplayName { get; set; }
+    //     public string DisplayName { get; set; }
         
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatedDate { get; set; }
+    //     [Required]
+    //     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    //     public DateTime CreatedDate { get; set; }
         
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdatedDate { get; set; }
+    //     [Required]
+    //     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    //     public DateTime UpdatedDate { get; set; }
 
-        public virtual List<NarrativeDataModel> Narratives { get; set; }
+    //     public virtual List<NarrativeDataModel> Narratives { get; set; }
 
-        public virtual List<CommentDataModel> Comments { get; set; }
-    }
+    //     public virtual List<CommentDataModel> Comments { get; set; }
+    // }
 }

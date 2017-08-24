@@ -1,48 +1,36 @@
 ﻿using System;
-using CasperInc.MainSite.API.Data;
-using CasperInc.MainSite.API.Data.Models;
-using CasperInc.MainSite.API.Repositories;
-using CasperInc.MainSite.API.DTOModels;
-using CasperInc.MainSite.Helpers;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AspNet.Security.OAuth.Introspection;
+using Casperinc.MainSite.API.Data;
+using Casperinc.MainSite.API.Data.Models;
+using Casperinc.MainSite.API.DTOModels;
+using Casperinc.MainSite.API.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NLog.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using CryptoHelper;
-using System.Threading.Tasks;
-using System.Threading;
-using OpenIddict.Core;
-using OpenIddict.Models;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using CasperInc.MainSite.Middleware;
 
-namespace CasperInc.MainSite.API
+namespace Casperinc.MainSite.API
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddJsonFile("dbConnections.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -50,82 +38,42 @@ namespace CasperInc.MainSite.API
 
             services.AddCors();
 
-            // Add framework services.
-            services.AddMvc(setupAction =>
-            {
-                setupAction.ReturnHttpNotAcceptable = true;
-                setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
-                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+            services.AddDbContext<MainSiteDbContext>(options => {
+                options.UseMySql(Configuration["Data:ConnectionStrings:MySQL"]);
             });
 
-            //services.AddEntityFrameworkSqlite();
+            
 
-            var mySQLConnectionString = Configuration["connectionStrings:MySQL"];
-            var sqLiteConnectionString = Configuration["connectionStrings:SQLite"];
-            services.AddDbContext<MainSiteDbContext>(options =>
-           {
-               options.UseMySql(mySQLConnectionString);
-               options.UseOpenIddict();
-           });
+                var Authority = new Uri(Configuration["OpenIddict:Authentication:Authority"]);
+                var Audiences = Configuration["OpenIddict:Client:ClientId"];
+                var ClientId = Configuration["OpenIddict:Client:ClientId"];
+                var ClientSecret = Configuration["OpenIddict:Client:ClientSecret"];
 
-            services.AddEntityFramework();
 
-            var ConnectionString = Configuration["connectionStrings:MySQL"];
-
-            services.AddIdentity<UserDataModel, IdentityRole>(options =>
+            services.AddAuthentication(options =>
             {
-                options.User.RequireUniqueEmail = true;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Cookies.ApplicationCookie.AutomaticChallenge = false;
+                options.DefaultScheme = OAuthIntrospectionDefaults.AuthenticationScheme;
             })
-            .AddEntityFrameworkStores<MainSiteDbContext>()
-            .AddDefaultTokenProviders();
 
 
-            // Register the OpenIddict services.
-            // Note: use the generic overload if you need
-            // to replace the default OpenIddict entities.
-            services.AddOpenIddict(options =>
+            .AddOAuthIntrospection(options =>
             {
-                // Register the Entity Framework stores.
-                options.AddEntityFrameworkCoreStores<MainSiteDbContext>();
+                options.Authority = new Uri(Configuration["OpenIddict:Authentication:Authority"]);
+                options.Audiences.Add(Configuration["OpenIddict:Client:ClientId"]);
+                options.ClientId = Configuration["OpenIddict:Client:ClientId"];
+                options.ClientSecret = Configuration["OpenIddict:Client:ClientSecret"];
+                options.RequireHttpsMetadata = false;
 
-                options.UseJsonWebTokens();
-
-                // Register the ASP.NET Core MVC binder used by OpenIddict.
-                // Note: if you don't call this method, you won't be able to
-                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                options.AddMvcBinders();
-
-				// Enable the token endpoint (required to use the password flow).
-				options.EnableTokenEndpoint(
-						Configuration["Authentication:OpenIddict:TokenEndPoint"]
-                );
-
-				options.EnableAuthorizationEndpoint(
-						Configuration["Authentication:OpenIddict:AuthorizationEndPoint"]
-				);
-
-                // Allow client applications to use the grant_type=password flow.
-                options.AllowPasswordFlow();
-
-                options.AllowAuthorizationCodeFlow();
-
-                options.AllowImplicitFlow();
-
-                options.AllowRefreshTokenFlow();
-
-                // During development, you can disable the HTTPS requirement.
-                options.DisableHttpsRequirement();
-
-                options.AddEphemeralSigningKey();
+                // Note: you can override the default name and role claims:
+                // options.NameClaimType = "custom_name_claim";
+                // options.RoleClaimType = "custom_role_claim";
             });
 
 
 
             services.AddScoped<INarrativeRepository, NarrativeRepository>();
 
-			services.AddSingleton<DbSeeder>();
+			services.AddScoped<DbSeeder>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory =>
@@ -133,10 +81,12 @@ namespace CasperInc.MainSite.API
                 var actionContext =
                     implementationFactory.GetService<IActionContextAccessor>().ActionContext;
                 return new UrlHelper(actionContext);
-            }
-            
-            );
+            });
 
+
+            services.AddMvc();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -168,6 +118,24 @@ namespace CasperInc.MainSite.API
             }
 
 
+            if (env.IsProduction()) 
+            {
+                app.UseCors(
+                    builder => builder
+                                    .WithOrigins("https://www.casperinc.expert")
+                                    .WithOrigins("https://dev-web.casperinc.net")
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader()
+                );
+            } else {
+                app.UseCors(
+                    builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()
+                );
+            }
+
+
+            app.UseAuthentication();
+
 
             // seed database if needed
             try
@@ -184,23 +152,6 @@ namespace CasperInc.MainSite.API
                 throw new Exception(e.ToString());
             }
 
-
-
-            if (env.IsProduction()) 
-            {
-                app.UseCors(
-                    builder => builder
-                                    .WithOrigins("https://www.casperinc.expert")
-                                    .WithOrigins("https://dev-web.casperinc.net")
-                                    .AllowAnyMethod()
-                                    .AllowAnyHeader()
-                );
-            } else {
-                app.UseCors(
-                    builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()
-                );
-            }
-
             AutoMapper.Mapper.Initialize(configure =>
             {
                 configure.CreateMap<NarrativeDataModel, NarrativeDTO>();
@@ -210,63 +161,7 @@ namespace CasperInc.MainSite.API
             });
 
 
-
-
-            app.UseOAuthValidation();
-
-
-			//app.UseJwtProvider();
-			app.UseOpenIddict();
-
-            app.UseJwtBearerAuthentication(new JwtBearerOptions()
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-				RequireHttpsMetadata = false,
-				Authority = Configuration["Authentication:OpenIddict:Authority"],
-                TokenValidationParameters = new TokenValidationParameters()
-                {
-                    IssuerSigningKey = JwtTokenProvider.SecurityKey,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = JwtTokenProvider.Issuer,
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                }
-            });
-
             app.UseMvc();
-
-			InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
-
         }
-
-        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken)
-		{
-			// Create a new service scope to ensure the database context is correctly disposed when this methods returns.
-			using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-			{
-				var context = scope.ServiceProvider.GetRequiredService<MainSiteDbContext>();
-				await context.Database.EnsureCreatedAsync();
-
-				// Note: when using a custom entity or a custom key type, replace OpenIddictApplication by the appropriate type.
-				var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
-
-				if (await manager.FindByClientIdAsync(Configuration["Authentication:OpenIddict:ClientId"], cancellationToken) == null)
-				{
-                    var application = new OpenIddictApplication
-                    {
-                        Id = Configuration["Authentication:OpenIddict:ApplicationId"],
-                        DisplayName = Configuration["Authentication:OpenIddict:DisplayName"],
-                        RedirectUri =  Configuration["Authentication:OpenIddict:Authority"] + Configuration["Authentication:OpenIddict:TokenEndPoint"],
-                        LogoutRedirectUri = Configuration["Authentication:OpenIddict:Authority"] + "/",
-                        ClientId = Configuration["Authentication:OpenIddict:ClientId"]
-					};
-
-					// await manager.CreateAsync(application, Configuration["Authentication:OpenIddict:ClientSecret"], cancellationToken);
-					 await manager.CreateAsync(application, cancellationToken);
-				}
-			}
-		}
-
     }
 }

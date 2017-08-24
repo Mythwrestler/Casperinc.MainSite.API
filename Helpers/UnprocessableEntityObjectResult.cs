@@ -2,7 +2,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace CasperInc.MainSite.Helpers
+namespace Casperinc.MainSite.Helpers
 {
     public class UnprocessableEntityObjectResult : ObjectResult
     {

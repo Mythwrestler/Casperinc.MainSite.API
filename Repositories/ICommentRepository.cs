@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using CasperInc.MainSite.API.Data.Models;
-using CasperInc.MainSite.Helpers;
+using Casperinc.MainSite.API.Data.Models;
+using Casperinc.MainSite.Helpers;
 
-namespace CasperInc.MainSite.API.Repositories
+namespace Casperinc.MainSite.API.Repositories
 {
     public interface ICommentRepository
     {

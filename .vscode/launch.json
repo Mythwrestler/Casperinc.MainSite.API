@@ -10,13 +10,13 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceRoot}/bin/Debug/netcoreapp1.1/CasperInc.MainSite.API.dll",
-            "args": ["--server.urls=http://*:6054"],
+            "program": "${workspaceRoot}/bin/Debug/netcoreapp2.0/Casperinc.MainSite.API.dll",
+            "args": ["--urls=http://*:6054"],
             "cwd": "${workspaceRoot}",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
-                "enabled": true,
+                "enabled": false,
                 "args": "${auto-detect-url}",
                 "windows": {
                     "command": "cmd.exe",

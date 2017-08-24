@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace CasperInc.MainSite.API.DTOModels
+namespace Casperinc.MainSite.API.DTOModels
 {
     public class NarrativeDTO
     {
