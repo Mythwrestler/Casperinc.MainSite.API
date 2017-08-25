@@ -1,5 +1,9 @@
 #connection settings
 dbConnections.json
+*.pfx
+*.Development.json
+*.Staging.json
+
 
 #compiled JS
 wwwroot/app

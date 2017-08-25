@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Casperinc.MainSite.Helpers
+namespace Casperinc.MainSite.API.Helpers
 {
     public class PagedList<t> : List<t>
     {

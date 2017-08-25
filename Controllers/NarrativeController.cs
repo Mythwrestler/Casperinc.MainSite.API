@@ -6,7 +6,7 @@ using AutoMapper;
 using Casperinc.MainSite.API.DTOModels;
 using Casperinc.MainSite.API.Repositories;
 using Casperinc.MainSite.API.Data.Models;
-using Casperinc.MainSite.Helpers;
+using Casperinc.MainSite.API.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;

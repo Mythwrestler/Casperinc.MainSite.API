@@ -1,5 +1,6 @@
 using System;
-namespace Casperinc.MainSite.Helpers
+
+namespace Casperinc.MainSite.API.Helpers
 {
     public class CommentResourceParameters
     {

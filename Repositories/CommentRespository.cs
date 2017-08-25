@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Casperinc.MainSite.API.Data;
 using Casperinc.MainSite.API.Data.Models;
-using Casperinc.MainSite.Helpers;
+using Casperinc.MainSite.API.Helpers;
 
 namespace Casperinc.MainSite.API.Repositories
 {

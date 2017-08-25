@@ -6,7 +6,7 @@ using Casperinc.MainSite.API.Data.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Casperinc.MainSite.Helpers;
+using Casperinc.MainSite.API.Helpers;
 
 namespace Casperinc.MainSite.API.Data
 {
@@ -31,6 +31,9 @@ namespace Casperinc.MainSite.API.Data
 
         public async Task ResetDBAsync()
         {
+
+            _dbContext.Database.EnsureCreated();
+
             _dbContext.NarrativeTagCrossWalk.RemoveRange(_dbContext.NarrativeTagCrossWalk);
             _dbContext.NarrativeData.RemoveRange(_dbContext.NarrativeData);
             _dbContext.TagData.RemoveRange(_dbContext.TagData);

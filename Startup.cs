@@ -6,6 +6,7 @@ using AspNet.Security.OAuth.Introspection;
 using Casperinc.MainSite.API.Data;
 using Casperinc.MainSite.API.Data.Models;
 using Casperinc.MainSite.API.DTOModels;
+using Casperinc.MainSite.API.Helpers;
 using Casperinc.MainSite.API.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -42,13 +43,8 @@ namespace Casperinc.MainSite.API
                 options.UseMySql(Configuration["Data:ConnectionStrings:MySQL"]);
             });
 
-            
-
-                var Authority = new Uri(Configuration["OpenIddict:Authentication:Authority"]);
-                var Audiences = Configuration["OpenIddict:Client:ClientId"];
-                var ClientId = Configuration["OpenIddict:Client:ClientId"];
-                var ClientSecret = Configuration["OpenIddict:Client:ClientSecret"];
-
+            var openIdConfiguation = Configuration.GetSection("OpenIdDict").Get<OpenIdDict>();
+            var client = openIdConfiguation.Clients.Where(kvp => kvp.Key == "This").FirstOrDefault().Value;
 
             services.AddAuthentication(options =>
             {
@@ -58,11 +54,11 @@ namespace Casperinc.MainSite.API
 
             .AddOAuthIntrospection(options =>
             {
-                options.Authority = new Uri(Configuration["OpenIddict:Authentication:Authority"]);
-                options.Audiences.Add(Configuration["OpenIddict:Client:ClientId"]);
-                options.ClientId = Configuration["OpenIddict:Client:ClientId"];
-                options.ClientSecret = Configuration["OpenIddict:Client:ClientSecret"];
-                options.RequireHttpsMetadata = false;
+                options.Authority = new Uri(openIdConfiguation.IssuingAuthority);
+                options.Audiences.Add(client.ClientId);
+                options.ClientId = client.ClientId;
+                options.ClientSecret = client.ClientSecret;
+                options.RequireHttpsMetadata = true;
 
                 // Note: you can override the default name and role claims:
                 // options.NameClaimType = "custom_name_claim";
@@ -93,7 +89,6 @@ namespace Casperinc.MainSite.API
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DbSeeder dbSeeder)
         {
             loggerFactory.AddConsole();
-            //loggerFactory.AddDebug();
             loggerFactory.AddNLog();
 
             if (env.IsDevelopment())

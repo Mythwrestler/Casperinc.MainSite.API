@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Casperinc.MainSite.Helpers;
+using Casperinc.MainSite.API.Helpers;
 
 namespace Casperinc.MainSite.API.Data.Models {
 

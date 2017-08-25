@@ -1,4 +1,4 @@
-namespace Casperinc.MainSite.Helpers
+namespace Casperinc.MainSite.API.Helpers
 {
    
     public enum NarrativeTypes {
